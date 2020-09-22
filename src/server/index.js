@@ -7,19 +7,37 @@
  */
 
 import express from "express";
+import {MongoClient} from "mongodb";
 import path from "path";
+import trees from "./controllers/trees";
 
 const {APP_PORT} = process.env;
 
-const app = express();
+// Connection URL
+const url = "mongodb://dev:dev@mongo:27017";
 
-app.use(express.static(path.resolve(__dirname, "../../bin/client")));
+// Database Name
+const dbName = "mwenbwa";
 
-app.get("/hello", (req, res) => {
-    console.log(`ℹ️  (${req.method.toUpperCase()}) ${req.url}`);
-    res.send("Hello, World!");
+// Use connect method to connect to the server
+MongoClient.connect(url, (err, client) => {
+    console.log(err);
+    if (err !== null) {
+        throw new Error(err.message);
+    }
+    console.log("Connected successfully to server");
+
+    const db = client.db(dbName);
+
+    const app = express();
+    app.locals.db = db;
+
+    app.use(express.static(path.resolve(__dirname, "../../bin/client")));
+
+    app.get("/api/trees", trees.list);
+    app.get("/api/trees/coords", trees.getByCoords);
+
+    app.listen(APP_PORT, () =>
+        console.log(`🚀 Server is listening on port ${APP_PORT}.`),
+    );
 });
-
-app.listen(APP_PORT, () =>
-    console.log(`🚀 Server is listening on port ${APP_PORT}.`),
-);
