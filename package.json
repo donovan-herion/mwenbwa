@@ -8,10 +8,10 @@
   "scripts": {
     "lint": "npx eslint --fix --cache --ignore-pattern 'docs/*' src",
     "build:server": "npx babel src/server -s --out-dir bin/server",
-    "work:server": "npx babel src/server -s --watch --verbose --out-dir bin/server",
+    "work:server": "npx babel src/server -s --watch --verbose --out-dir bin/server --copy-files",
     "build:client": "npx webpack --progress --profile --colors",
     "work:client": "npx webpack --env=dev --progress",
-    "build": "npm run build:server && npm run build:client"
+    "build": "npm run build:server && npm run build:client --copy-files"
   },
   "lint-staged": {
     "*.js": [
@@ -30,6 +30,7 @@
     "@becode/eslint-config": "^0.9.1",
     "babel-eslint": "^10.1.0",
     "babel-loader": "^8.1.0",
+    "dotenv": "^8.2.0",
     "eslint": "^7.0.0",
     "eslint-plugin-prettier": "^3.1.3",
     "eslint-plugin-react": "^7.20.0",
@@ -44,9 +45,17 @@
     "webpack-cli": "^3.3.11"
   },
   "dependencies": {
+    "bcrypt": "^5.0.0",
+    "ejs": "^3.1.5",
     "express": "^4.17.1",
+    "express-flash": "0.0.2",
+    "express-session": "^1.17.1",
     "leaflet": "^1.7.1",
+    "method-override": "^3.0.0",
     "mongodb": "^3.6.2",
+    "mongoose": "^5.10.7",
+    "passport": "^0.4.1",
+    "passport-local": "^1.0.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1"
   },

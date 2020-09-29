@@ -1,3 +1,4 @@
+// import { resolveSoa } from "dns";
 /* becodeorg/mwenbwa
  *
  * /src/server/index.js - Server entry point
@@ -8,7 +9,7 @@
 
 import express from "express";
 import {MongoClient} from "mongodb";
-import path from "path";
+// import path from "path";
 import trees from "./controllers/trees";
 
 const {APP_PORT} = process.env;
@@ -31,8 +32,6 @@ MongoClient.connect(url, (err, client) => {
 
     const app = express();
     app.locals.db = db;
-
-    app.use(express.static(path.resolve(__dirname, "../../bin/client")));
 
     app.get("/api/trees", trees.list);
     app.get("/api/trees/coords", trees.getByCoords);
