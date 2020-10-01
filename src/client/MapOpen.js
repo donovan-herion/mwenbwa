@@ -5,10 +5,10 @@ import {Map, Marker, TileLayer, Popup} from "react-leaflet";
 import Trees from "./data/arbustum.json";
 import treepng from "./data/tree.png";
 
-//Const declaration (History on the DB)
+// // Const declaration (History on the DB)
 // const history = ["Michael Proprio", "Arthur Proprio", "Donovan Proprio"];
 
-//Const declaration (History on the DB)
+// // Const declaration (History on the DB)
 // const comments = ["Don't take it plz", "I don't care", "fu u bastard"];
 
 //Icon properties
