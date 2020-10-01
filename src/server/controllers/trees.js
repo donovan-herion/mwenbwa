@@ -1,3 +1,6 @@
+// const Tree = require("../models/tree");
+// const User = require("../models/user");
+
 const list = async (req, res) => {
     try {
         const collection = req.app.locals.db.collection("trees");

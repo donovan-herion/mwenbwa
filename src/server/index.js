@@ -8,35 +8,42 @@
  */
 
 import express from "express";
-import {MongoClient} from "mongodb";
-// import path from "path";
-import trees from "./controllers/trees";
+import path from "path";
+const mongoose = require("mongoose");
+const treeRoutes = require("./routes/tree");
+const userRoutes = require("./routes/user");
+// const Tree = require("./models/tree");
+// const User = require("./models/user");
+
+mongoose
+    .connect("mongodb://dev:dev@mongo:27017/", {
+        dbName: "mwenbwa",
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+    })
+    .then(() => console.log("Connection to MongoDB successful"))
+    .catch(() => console.log("Connection to MongoDB failed"));
 
 const {APP_PORT} = process.env;
+const app = express();
 
-// Connection URL
-const url = "mongodb://dev:dev@mongo:27017";
+app.use(express.static(path.resolve(__dirname, "../../bin/client")));
 
-// Database Name
-const dbName = "mwenbwa";
+app.use("/api/auth", userRoutes);
+app.use("/api/tree", treeRoutes);
 
-// Use connect method to connect to the server
-MongoClient.connect(url, (err, client) => {
-    console.log(err);
-    if (err !== null) {
-        throw new Error(err.message);
-    }
-    console.log("Connected successfully to server");
-
-    const db = client.db(dbName);
-
-    const app = express();
-    app.locals.db = db;
-
-    app.get("/api/trees", trees.list);
-    app.get("/api/trees/coords", trees.getByCoords);
-
-    app.listen(APP_PORT, () =>
-        console.log(`🚀 Server is listening on port ${APP_PORT}.`),
+app.get("/*", (req, res) => {
+    // eslint-disable-next-line no-sequences
+    res.sendFile(
+        path.resolve(__dirname, "../../bin/client/index.html"),
+        err => {
+            if (err) {
+                res.status(500).send(err);
+            }
+        },
     );
 });
+
+app.listen(APP_PORT, () =>
+    console.log(`🚀 Server is listening on port ${APP_PORT}.`),
+);
