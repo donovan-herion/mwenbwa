@@ -1,5 +1,30 @@
 .leaflet-container {
-  width: 90%;
-  height: 90vh;
-  margin: 5vh auto;
+    width: 82vw;
+    height: 100vh;
+    position: relative;
+    z-index: 1;
+}
+
+.buy-submit {
+    height: 100px;
+    width: 100%;
+    align-content: center;
+    display: flex;
+    justify-content: center;
+}
+
+.buy-submit-btn {
+    width: 80%;
+    margin: 0 auto;
+    height: 60px;
+    padding: 20px;
+    background-color: white;
+    border: solid 2px rgb(22, 190, 0);
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.buy-leaves {
+    width: 20px;
+    margin: 0 5px;
 }
