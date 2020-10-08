@@ -1,117 +1,41 @@
 // eslint-disable-next-line unicorn/filename-case
 import React, {useState} from "react";
-import greenTriangle from "./data/green-triangle.png";
+import "./Home.css";
+import flatDesign from "./data/flat-design.jpg";
+import Login from "./Login";
+import Signup from "./Signup";
 
-const itemsStyle = {
-    margin: "350px 80px 0",
-    width: "250px",
-    backgroundColor: "#BA855E",
-    position: "relative",
-    color: "white",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-};
+function Home() {
+    const [hide, setHide] = useState("");
 
-const greenTriangleStyle = {
-    width: "400px",
-    height: "200px",
-    position: "absolute",
-    top: "-180px",
-    left: "-75px",
-};
-export default function Home() {
-    const [hide, setHide] = useState("flex");
+    const [connexionStatus, setConnexionStatus] = useState(true);
+
     return (
         <>
-            <div
-                // eslint-disable-next-line react/jsx-no-duplicate-props
-                style={{
-                    display: hide,
-                    justifyContent: "center",
-                    width: "100vw",
-                    height: "100vh",
-                    position: "fixed",
-                    zIndex: "2",
-                    backgroundColor: "white",
-                }}>
-                <div style={itemsStyle}>
-                    <img src={greenTriangle} style={greenTriangleStyle} />
-
-                    <h2>{"Game rules"}</h2>
-                    <p style={{margin: "10px"}}>
-                        {"Lorem ipsum dolor sit amet consectetur."}
-                    </p>
-                    <p style={{margin: "10px"}}>
-                        {"Lorem ipsum dolor sit amet consectetur."}
-                    </p>
-                    <p style={{margin: "10px"}}>
-                        {"Lorem ipsum dolor sit amet consectetur."}
-                    </p>
-                    <p style={{margin: "10px"}}>
-                        {"Lorem ipsum dolor sit amet consectetur."}
-                    </p>
-                    <p style={{margin: "10px"}}>
-                        {"Lorem ipsum dolor sit amet consectetur."}
-                    </p>
-                </div>{" "}
-                <div style={itemsStyle}>
-                    <img src={greenTriangle} style={greenTriangleStyle} />
-
-                    <h2>{"Login"}</h2>
-                    <input
-                        type={"text"}
-                        name={"name"}
-                        placeholder={"Your name"}
+            <div className="home-full-screen" style={{display: hide}}>
+                {" "}
+            </div>
+            <div className="home-flex-container" style={{display: hide}}>
+                <div className="home-left">
+                    <img
+                        src={flatDesign}
+                        className="home-flat-design"
+                        alt="flat design"
                     />
-                    <br />
-                    <input
-                        type={"email"}
-                        name={"email"}
-                        placeholder={"Your email"}
-                    />
-                    <br />
-                    <input
-                        type={"password"}
-                        name={"password"}
-                        placeholder={"Your password"}
-                    />
-                    <br />
-                    <button
-                        // eslint-disable-next-line react/jsx-curly-brace-presence
-                        type="button"
-                        onClick={() => {
-                            setHide("none");
-                        }}>
-                        {"Simulation Login"}
-                    </button>
+                    <a
+                        href="#"
+                        onClick={() => setConnexionStatus(!connexionStatus)}
+                        className="home-create-button">
+                        {connexionStatus
+                            ? "Create an account"
+                            : "I already have an account"}
+                    </a>
                 </div>
-                <div style={itemsStyle}>
-                    <img src={greenTriangle} style={greenTriangleStyle} />
-                    <h2>{"Sign Up"}</h2>
-                    <br />
-                    <input
-                        type={"email"}
-                        name={"email"}
-                        placeholder={"Your email"}
-                    />
-                    <br />
-                    <input
-                        type={"password"}
-                        name={"password"}
-                        placeholder={"Your password"}
-                    />
-                    <br />
-                    <button
-                        // eslint-disable-next-line react/jsx-curly-brace-presence
-                        type="button"
-                        onClick={() => {
-                            setHide("none");
-                        }}>
-                        {"Simulation Sign Up"}
-                    </button>
-                </div>
+                <Login connexionStatus={connexionStatus} setHide={setHide} />
+                <Signup connexionStatus={connexionStatus} setHide={setHide} />
             </div>
         </>
     );
 }
+
+export default Home;
