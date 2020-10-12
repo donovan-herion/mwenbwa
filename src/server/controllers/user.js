@@ -54,6 +54,8 @@ const login = (req, res) => {
                     }
                     res.status(200).json({
                         userId: user._id,
+                        name: user.name,
+                        color: user.color,
                         email: user.email,
                         token: jwt.sign({userId: user._id}, privateKEY, {
                             expiresIn: "24h",

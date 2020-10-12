@@ -3,7 +3,7 @@ import {MongoClient} from "mongodb";
 import path from "path";
 import trees from "./controllers/tree";
 import users from "./controllers/user";
-import setupDb from "./models/db";
+import stuffDB from "./models/db";
 import bodyParser from "body-parser";
 
 const {APP_PORT} = process.env;
@@ -21,7 +21,8 @@ MongoClient.connect(url, (err, client) => {
     }
 
     const db = client.db(dbName);
-    setupDb(db);
+    stuffDB.addOwnerAndIsLockedToTree(db);
+    stuffDB.setupDb(db);
 
     const app = express();
     app.locals.db = db;
@@ -36,8 +37,8 @@ MongoClient.connect(url, (err, client) => {
     app.post("/signup", users.signup);
     app.post("/login", users.login);
 
-    app.get("/api/tree", trees.getAllTrees);
-    app.get("/api/trees", trees.list);
+    app.get("/api/trees", trees.getAllTrees);
+    app.get("/api/tree", trees.getOneTree);
 
     app.listen(APP_PORT, () =>
         console.log(`🚀 Server is listening on port ${APP_PORT}.`),

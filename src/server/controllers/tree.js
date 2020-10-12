@@ -1,5 +1,7 @@
 // const User = require("../models/user");
 
+import {ObjectId} from "mongodb";
+
 const list = async (req, res) => {
     try {
         const collection = req.app.locals.db.collection("trees");
@@ -16,25 +18,14 @@ const list = async (req, res) => {
 const queryGetAllTrees = () => ({
     $project: {
         _id: 1,
-        name: 1,
-        location: 1,
-        diameter: 1,
-        height: 1,
-        owner: 1,
-        isLocked: 1,
-        comments: {
-            _id: 1,
-            content: 1,
-            owner: 1,
-            createdAt: 1,
-        },
+        x_lambda: 1,
+        y_phi: 1,
     },
 });
 
 const getAllTrees = async (req, res) => {
     const lat = parseFloat(req.query.lat);
     const lng = parseFloat(req.query.lng);
-    console.log(lat, lng);
 
     try {
         const collection = req.app.locals.db.collection("trees");
@@ -62,24 +53,58 @@ const getAllTrees = async (req, res) => {
     }
 };
 
+const getTreePrice = async (treeId, db) => {
+    let value = 250;
+    const trees = db.collection("trees");
+    const tree = await trees.findOne({_id: ObjectId(treeId)});
+    try {
+        if (tree.hauteur_totale !== null || tree.circonf !== null) {
+            value = Math.ceil((tree.hauteur_totale * tree.circonf) / Math.PI);
+        }
+        console.log(value);
+
+        // await trees.updateOne(
+        //     {_id: ObjectId(treeId)},
+        //     {$set: {price: value}},
+        //     false,
+        //     true,
+        // );
+        return value;
+    } catch (error) {
+        console.log(error);
+        return true;
+    }
+};
+
 const getOneTree = async (req, res) => {
     try {
-        const collection = req.app.locals.db.collection("trees");
-        const responseGetOneTree = await collection
-            .aggregate([
-                {$match: {_id: collection.ObjectId(req.params.treeId)}},
-            ])
-            .toArray();
+        const treeId = req.query.id;
 
-        const tree = responseGetOneTree[0];
+        const options = {
+            projection: {
+                _id: 1,
+                nom_complet: 1,
+                hauteur_totale: 1,
+                diametre_cime: 1,
+                circonf: 1,
+                isLocked: 1,
+                price: 1,
+                owner: 1,
+                x_lambda: 1,
+                y_phi: 1,
+            },
+        };
 
-        // console.log(JSON.stringify(tree));
+        const trees = req.app.locals.db.collection("trees");
+        const tree = await trees.findOne({_id: ObjectId(treeId)}, options);
 
-        //tree.price = await calculatePrice(tree, req.userId);
+        tree.price = await getTreePrice(treeId, req.app.locals.db);
+        console.log(tree.price);
 
         return res.status(200).json(tree);
     } catch (error) {
-        return res.status(500).json({error});
+        console.log(error);
+        return res.status(500).json({error: error.message});
     }
 };
 
