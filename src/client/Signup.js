@@ -1,9 +1,14 @@
 // eslint-disable-next-line unicorn/filename-case
-import React from "react";
+import React, {useState} from "react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faUser, faAt, faUnlock} from "@fortawesome/free-solid-svg-icons";
 
 function Signup(props) {
+    const [name, setName] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [color, setColor] = useState("");
+
     if (props.connexionStatus == false) {
         return (
             <div className="home-right">
@@ -18,6 +23,7 @@ function Signup(props) {
                         type="text"
                         name="username"
                         placeholder="Username"
+                        onChange={(e) => setName(e.target.value)}
                     />
                 </div>
                 <div className="home-signup-text-input-container">
@@ -30,6 +36,7 @@ function Signup(props) {
                         type="text"
                         name="username"
                         placeholder="Email"
+                        onChange={(e) => setEmail(e.target.value)}
                     />
                 </div>
 
@@ -43,6 +50,7 @@ function Signup(props) {
                         type="password"
                         name="password"
                         placeholder="Password"
+                        onChange={(e) => setPassword(e.target.value)}
                     />
                 </div>
                 <div className="home-signup-checkbox-container">
@@ -52,7 +60,9 @@ function Signup(props) {
                     </span>
                 </div>
                 <button
-                    onClick={() => props.setHide("none")}
+                    onClick={() =>
+                        props.createUser(name, email, password, color)
+                    }
                     className="home-signup-submit-button"
                     type="submit">
                     Sign Up

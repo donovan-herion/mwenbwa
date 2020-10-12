@@ -1,9 +1,12 @@
 // eslint-disable-next-line unicorn/filename-case
-import React from "react";
+import React, {useState} from "react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faAt, faUnlock} from "@fortawesome/free-solid-svg-icons";
 
 function Login(props) {
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+
     if (props.connexionStatus == true) {
         return (
             <div className="home-right">
@@ -18,6 +21,7 @@ function Login(props) {
                         type="email"
                         name="username"
                         placeholder="Email"
+                        onChange={(e) => setEmail(e.target.value)}
                     />
                 </div>
                 <div className="home-login-text-password-container">
@@ -30,6 +34,7 @@ function Login(props) {
                         type="password"
                         name="password"
                         placeholder="Password"
+                        onChange={(e) => setPassword(e.target.value)}
                     />
                 </div>
                 <div className="home-login-checkbox-container">
@@ -43,7 +48,7 @@ function Login(props) {
                     </span>
                 </div>
                 <button
-                    onClick={() => props.setHide("none")}
+                    onClick={() => props.checkUser(email, password)}
                     className="home-login-submit-button"
                     type="submit">
                     Login

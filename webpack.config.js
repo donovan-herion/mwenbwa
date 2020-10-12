@@ -58,7 +58,7 @@ module.exports = (env) => {
                 ? "cheap-module-eval-source-map"
                 : "hidden-source-map",
         context: resolve(__dirname, "./src/client"),
-        entry: ["./index.js"],
+        entry: ["babel-polyfill", "./index.js"],
         module: {
             rules: [
                 {
