@@ -62,6 +62,27 @@ const getAllTrees = async (req, res) => {
     }
 };
 
+const getOneTree = async (req, res) => {
+    try {
+        const collection = req.app.locals.db.collection("trees");
+        const responseGetOneTree = await collection
+            .aggregate([
+                {$match: {_id: collection.ObjectId(req.params.treeId)}},
+            ])
+            .toArray();
+
+        const tree = responseGetOneTree[0];
+
+        // console.log(JSON.stringify(tree));
+
+        //tree.price = await calculatePrice(tree, req.userId);
+
+        return res.status(200).json(tree);
+    } catch (error) {
+        return res.status(500).json({error});
+    }
+};
+
 const getByCoords = async (req, res) => {
     try {
         const {lat, lng} = req.query;
@@ -82,4 +103,5 @@ export default {
     list,
     getByCoords,
     getAllTrees,
+    getOneTree,
 };
