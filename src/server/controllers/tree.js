@@ -63,12 +63,6 @@ const getTreePrice = async (treeId, db) => {
         }
         console.log(value);
 
-        // await trees.updateOne(
-        //     {_id: ObjectId(treeId)},
-        //     {$set: {price: value}},
-        //     false,
-        //     true,
-        // );
         return value;
     } catch (error) {
         console.log(error);
@@ -124,9 +118,125 @@ const getByCoords = async (req, res) => {
     }
 };
 
+const lockTree = async (req, res) => {
+    const trees = req.app.locals.db.collection("trees");
+    const users = req.app.locals.db.collection("users");
+    try {
+        const user = await users.findOne({_id: req.userId});
+        if (!user) {
+            return res.status(404).json({error: "User not found"});
+        }
+
+        const tree = await trees.findOne({_id: req.params.treeId});
+        if (!tree) {
+            return res.status(404).json({error: "Tree not found"});
+        }
+
+        const isTreeBelongToUser =
+            user._id.toString() === tree.owner.toString() ? true : false;
+        if (!isTreeBelongToUser) {
+            return res.status(403).json({
+                error: "The tree does not belong to this user",
+            });
+        }
+
+        if (tree.isLocked) {
+            return res.status(403).json({
+                error: "The tree is already locked",
+            });
+        }
+
+        // TODO const lockPrice = await calculateLockPrice(tree);
+
+        const isPlayerHaveEnoughLeavesToLock =
+            user.leaves >= lockPrice ? true : false;
+        if (!isPlayerHaveEnoughLeavesToLock) {
+            return res.status(401).json({
+                error: "The user doesn't have enough leaves to lock this tree",
+            });
+        }
+
+        await trees.updateOne({_id: tree._id}, {isLocked: true});
+
+        await users.updateOne(
+            {_id: user._id},
+            {leaves: user.leaves - lockPrice},
+        );
+        // TODO log.add({action: "Tree locked", createdBy: req.userId});
+
+        return res.status(201).json("Tree successfully locked");
+    } catch (error) {
+        res.status(500).json({error});
+    }
+
+    return true;
+};
+
+const buyOneTree = async (req, res) => {
+    const trees = req.app.locals.db.collection("trees");
+    const users = req.app.locals.db.collection("users");
+    const treeId = req.params.treeId;
+    const userId = req.userId;
+
+    try {
+        const user = await users.findById(userId);
+        if (!user) {
+            return res.status(404).json({error: "User not found"});
+        }
+        const tree = await trees.findById(treeId);
+        if (!tree) {
+            return res.status(404).json({error: "tree not found"});
+        }
+
+        if (tree.owner === null || tree.owner.toString() !== userId) {
+            if (tree.isLocked !== true) {
+                // TODO const treePrice = await calculatePrice(tree, userId);
+                // console.log(treePrice);
+                if (user.leaves > treePrice) {
+                    try {
+                        await trees.updateOne(
+                            {_id: treeId},
+                            {
+                                color: user.color,
+                                owner: userId,
+                            },
+                        );
+
+                        await users.updateOne(
+                            {_id: userId},
+                            {
+                                leaves: Math.ceil(user.leaves - treePrice),
+                            },
+                        );
+
+                        console.log("you bought a tree");
+                    } catch (error) {
+                        console.log(error);
+                    }
+                } else {
+                    return res
+                        .status(403)
+                        .json({message: "you don't have enough leaves"});
+                }
+            } else {
+                return res.status(403).json({message: "this tree is locked"});
+            }
+        } else {
+            return res.status(403).json({message: "you already own this tree"});
+        }
+    } catch (error) {
+        res.status(500).json({error});
+    }
+    // TODO log.add({action: "Tree purchased", createdBy: userId});
+
+    return res.status(201).json({message: "Successfull transaction"});
+};
+
 export default {
     list,
     getByCoords,
     getAllTrees,
     getOneTree,
+    buyOneTree,
+    lockTree,
 };

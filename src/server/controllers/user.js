@@ -2,6 +2,8 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import fs from "fs";
 
+import {ObjectId} from "mongodb";
+
 const privateKEY = fs.readFileSync(`${__dirname}/jwtRS256.key`, "utf8");
 // var publicKEY  = fs.readFileSync('../jwtRS256.key.pub', 'utf8');
 
@@ -70,25 +72,27 @@ const login = (req, res) => {
     return true;
 };
 
-// exports.getUserInfos = async (req, res) => {
-//     try {
-//         const responseGetUserInfos = await User.aggregate([
-//             {
-//                 $match: {_id: mongoose.Types.ObjectId(req.userId)},
-//             },
-//             // queryPopulateTrees(),
-//             // queryGetUsersInfos(),
-//         ]).exec();
+const getUserInfos = async (req, res) => {
+    const users = req.app.locals.db.collection("users");
+    try {
+        const responseGetUserInfos = await users
+            .aggregate([
+                {
+                    $match: {_id: ObjectId(req.body.userId)},
+                },
+            ])
+            .toArray();
 
-//         const userInfos = responseGetUserInfos[0];
+        const userInfos = responseGetUserInfos[0];
 
-//         return res.status(200).json(userInfos);
-//     } catch (error) {
-//         return res.status(500).json({error});
-//     }
-// };
+        return res.status(200).json(userInfos);
+    } catch (error) {
+        return res.status(500).json({error: error.message});
+    }
+};
 
 export default {
     login,
     signup,
+    getUserInfos,
 };

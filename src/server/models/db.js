@@ -22,7 +22,7 @@ const addOwnerAndIsLockedToTree = async db => {
         const trees = db.collection("trees");
         await trees.updateMany(
             {},
-            {$set: {owner: null, isLocked: false, price: 250}},
+            {$set: {owner: null, isLocked: false, price: 250, color: null}},
             false,
             true,
         );

@@ -3,6 +3,7 @@ import {MongoClient} from "mongodb";
 import path from "path";
 import trees from "./controllers/tree";
 import users from "./controllers/user";
+import logs from "./controllers/log";
 import stuffDB from "./models/db";
 import bodyParser from "body-parser";
 
@@ -36,6 +37,7 @@ MongoClient.connect(url, (err, client) => {
 
     app.post("/signup", users.signup);
     app.post("/login", users.login);
+    app.post("/info", users.getUserInfos);
 
     app.get("/api/trees", trees.getAllTrees);
     app.get("/api/tree", trees.getOneTree);
