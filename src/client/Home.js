@@ -1,12 +1,12 @@
 // eslint-disable-next-line unicorn/filename-case
-import React, {useState, useEffect} from "react";
+import React, {useState} from "react";
 import "./Home.css";
 import flatDesign from "./data/flat-design.jpg";
 import Login from "./Login";
 import Signup from "./Signup";
 import axios from "./axios";
 
-function Home() {
+function Home(props) {
     const [hide, setHide] = useState("");
 
     const [connexionStatus, setConnexionStatus] = useState(true);
@@ -18,9 +18,9 @@ function Home() {
                 password: tempPassword,
             })
             .then((res) => {
-                console.log("moment de creer la session");
+                console.log("moment de creer la session login");
+                console.log("checked user");
                 console.log(res);
-
                 setHide("none");
             })
             .catch((err) => console.log(err.message));
@@ -35,9 +35,10 @@ function Home() {
                 color: tempColor,
             })
             .then((res) => {
-                console.log("moment de creer la session");
-                console.log(res);
-                setHide("none");
+                console.log("moment de creer la session signup");
+                props.setName(JSON.parse(res.config.data).name);
+                // setHide("none");
+                setConnexionStatus(!connexionStatus);
             })
             .catch((err) => console.log(err.message));
     };
@@ -64,6 +65,7 @@ function Home() {
                     </a>
                 </div>
                 <Login
+                    setName={props.setName}
                     connexionStatus={connexionStatus}
                     setHide={setHide}
                     checkUser={checkUser}

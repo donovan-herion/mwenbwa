@@ -54,7 +54,11 @@ function Signup(props) {
                     />
                 </div>
                 <div className="home-signup-checkbox-container">
-                    <input type="color" name="" />
+                    <input
+                        type="color"
+                        name=""
+                        onChange={(e) => setColor(e.target.value)}
+                    />
                     <span className="home-signup-span-checkbox">
                         Choose your color
                     </span>

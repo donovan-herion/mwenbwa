@@ -1,5 +1,5 @@
 // eslint-disable-next-line unicorn/filename-case
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import "./Dashboard.css";
 import player from "./data/player.jpg";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
@@ -14,7 +14,7 @@ import ModalSettings from "./ModalSettings";
 import ModalRules from "./ModalRules";
 import ModalLogout from "./ModalLogout";
 
-function Dashboard() {
+function Dashboard(props) {
     // Modal settings
     const [showRules, setShowRules] = useState(false);
 
@@ -36,7 +36,7 @@ function Dashboard() {
     return (
         <div className="structure-div">
             <img className="profile-pic" src={player} alt="player picture" />
-            <h2 className="player-info">Player Name</h2>
+            <h2 className="player-info">{`${props.name}`}</h2>
             <div className="leaves-tree">
                 <p className="p-leaves-tree">
                     <FontAwesomeIcon icon={faLeaf} /> 150
