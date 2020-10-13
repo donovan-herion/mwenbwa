@@ -1,4 +1,6 @@
 // const User = require("../models/user");
+import log from "./controllers/log";
+import helpers from "./helpers/helpers";
 
 import {ObjectId} from "mongodb";
 
@@ -148,7 +150,7 @@ const lockTree = async (req, res) => {
             });
         }
 
-        // TODO const lockPrice = await calculateLockPrice(tree);
+        const lockPrice = await helpers.calculateLockPrice(tree);
 
         const isPlayerHaveEnoughLeavesToLock =
             user.leaves >= lockPrice ? true : false;
@@ -164,7 +166,7 @@ const lockTree = async (req, res) => {
             {_id: user._id},
             {leaves: user.leaves - lockPrice},
         );
-        // TODO log.add({action: "Tree locked", createdBy: req.userId});
+        log.add({action: "Tree locked", createdBy: req.userId});
 
         return res.status(201).json("Tree successfully locked");
     } catch (error) {
@@ -192,8 +194,8 @@ const buyOneTree = async (req, res) => {
 
         if (tree.owner === null || tree.owner.toString() !== userId) {
             if (tree.isLocked !== true) {
-                // TODO const treePrice = await calculatePrice(tree, userId);
-                // console.log(treePrice);
+                const treePrice = await helpers.calculatePrice(tree, userId);
+                console.log(treePrice);
                 if (user.leaves > treePrice) {
                     try {
                         await trees.updateOne(
@@ -229,7 +231,7 @@ const buyOneTree = async (req, res) => {
     } catch (error) {
         res.status(500).json({error});
     }
-    // TODO log.add({action: "Tree purchased", createdBy: userId});
+    log.add({action: "Tree purchased", createdBy: userId});
 
     return res.status(201).json({message: "Successfull transaction"});
 };
