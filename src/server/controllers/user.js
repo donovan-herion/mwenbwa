@@ -60,6 +60,7 @@ const login = (req, res) => {
                         name: user.name,
                         color: user.color,
                         email: user.email,
+                        leaves: user.leaves,
                         token: jwt.sign({userId: user._id}, privateKEY, {
                             expiresIn: "24h",
                         }),
