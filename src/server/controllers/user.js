@@ -30,6 +30,7 @@ const signup = async (req, res) => {
             email: req.body.email,
             password: hash,
             color: req.body.color,
+            leaves: 0,
         };
         await users.insertOne(user);
         res.status(201).json({message: "User created"});
