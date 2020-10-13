@@ -1,6 +1,6 @@
 // const User = require("../models/user");
-import log from "./controllers/log";
-import helpers from "./helpers/helpers";
+import log from "./log";
+import helpers from "../helpers/helpers";
 
 import {ObjectId} from "mongodb";
 
