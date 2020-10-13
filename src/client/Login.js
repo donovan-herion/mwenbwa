@@ -7,11 +7,6 @@ function Login(props) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
-    const assignName = () => {
-        props.setName("Ahmed");
-        console.log("assigned name");
-    };
-
     if (props.connexionStatus == true) {
         return (
             <div className="home-right">
@@ -55,7 +50,6 @@ function Login(props) {
                 <button
                     onClick={() => {
                         props.checkUser(email, password);
-                        assignName();
                     }}
                     className="home-login-submit-button"
                     type="submit">

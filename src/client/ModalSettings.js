@@ -31,6 +31,7 @@ function ModalSettings(props) {
                                 type="text"
                                 name="username"
                                 placeholder="Username"
+                                value={props.userNameSettings}
                             />
                         </div>
                         <div className="modal-signup-text-input-container">
@@ -43,6 +44,7 @@ function ModalSettings(props) {
                                 type="text"
                                 name="username"
                                 placeholder="Email"
+                                value={props.userEmailSettings}
                             />
                         </div>
 
@@ -56,10 +58,15 @@ function ModalSettings(props) {
                                 type="password"
                                 name="password"
                                 placeholder="Password"
+                                value={props.userPasswordSettings}
                             />
                         </div>
                         <div className="modal-signup-checkbox-container">
-                            <input type="color" name="" />
+                            <input
+                                type="color"
+                                name=""
+                                value={props.userColorSettings}
+                            />
                             <span className="modal-signup-span-checkbox">
                                 Your color
                             </span>

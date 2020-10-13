@@ -4,14 +4,18 @@ import Home from "./Home";
 import Dashboard from "./Dashboard";
 
 function Parent() {
-    const [token, setToken] = useState("");
-    const [name, setName] = useState("");
-    console.log(name);
+    const [name, setName] = useState(null);
+    const [userId, setUserId] = useState(null);
+    const [userToken, setUserToken] = useState(null);
 
     return (
         <>
-            <Home setName={setName} />
-            <Dashboard name={name} />
+            <Home
+                setUserId={setUserId}
+                setUserToken={setUserToken}
+                setName={setName}
+            />
+            <Dashboard userId={userId} userToken={userToken} name={name} />
             <MapOpen />
         </>
     );

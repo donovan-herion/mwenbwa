@@ -19,8 +19,9 @@ function Home(props) {
             })
             .then((res) => {
                 console.log("moment de creer la session login");
-                console.log("checked user");
-                console.log(res);
+                props.setName(res.data.name);
+                props.setUserId(res.data.userId);
+                props.setUserToken(res.data.userToken);
                 setHide("none");
             })
             .catch((err) => console.log(err.message));
