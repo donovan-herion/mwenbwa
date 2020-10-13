@@ -2,6 +2,7 @@
 import React, {useState, useEffect} from "react";
 import "./Dashboard.css";
 import player from "./data/player.jpg";
+import axios from "./axios";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {
     faLeaf,
@@ -32,6 +33,27 @@ function Dashboard(props) {
 
     const handleCloseLogout = () => setShowLogout(false);
     const handleShowLogout = () => setShowLogout(true);
+
+    // state for modalsettings
+    const [userNameSettings, setUserNameSettings] = useState(null);
+    const [userEmailSettings, setUserEmailSettings] = useState(null);
+    const [userPasswordSettings, setUserPasswordSettings] = useState(null);
+    const [userColorSettings, setUserColorSettings] = useState(null);
+
+    // getUserInfo and push it into the modalsettings
+    const getUserInfo = () => {
+        axios
+            .post("/info", {
+                userId: props.userId,
+            })
+            .then((res) => {
+                setUserNameSettings(res.data.name);
+                setUserEmailSettings(res.data.email);
+                setUserPasswordSettings(res.data.password);
+                setUserColorSettings(res.data.color);
+            })
+            .catch((err) => console.log(err.message));
+    };
 
     return (
         <div className="structure-div">
@@ -67,7 +89,10 @@ function Dashboard(props) {
             </p>
             <div className="settings-signout">
                 <FontAwesomeIcon
-                    onClick={() => handleShowSettings()}
+                    onClick={() => {
+                        handleShowSettings();
+                        getUserInfo();
+                    }}
                     icon={faUserCog}
                 />
                 <FontAwesomeIcon
@@ -80,6 +105,10 @@ function Dashboard(props) {
                 />
             </div>
             <ModalSettings
+                userNameSettings={userNameSettings}
+                userEmailSettings={userEmailSettings}
+                userPasswordSettings={userPasswordSettings}
+                userColorSettings={userColorSettings}
                 showSettings={showSettings}
                 handleCloseSettings={handleCloseSettings}
             />
