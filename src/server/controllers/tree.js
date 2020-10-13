@@ -28,8 +28,8 @@ const queryGetAllTrees = () => ({
 });
 
 const getAllTrees = async (req, res) => {
-    const lat = parseFloat(req.query.lat);
-    const lng = parseFloat(req.query.lng);
+    const lat = parseFloat(req.body.lat);
+    const lng = parseFloat(req.body.lng);
 
     try {
         const collection = req.app.locals.db.collection("trees");
@@ -53,7 +53,7 @@ const getAllTrees = async (req, res) => {
         return res.status(200).json(responseGetAllTrees);
     } catch (error) {
         console.log(error);
-        return res.status(500).json({error});
+        return res.status(500).json({error: error.message});
     }
 };
 
