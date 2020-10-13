@@ -1,5 +1,6 @@
 // import {createIndexes} from "./indexes";
 import {createUserCollection} from "./user";
+import Tree from "../controllers/tree";
 
 const setupDb = async db => {
     try {
@@ -22,7 +23,14 @@ const addOwnerAndIsLockedToTree = async db => {
         const trees = db.collection("trees");
         await trees.updateMany(
             {},
-            {$set: {owner: null, isLocked: false, price: 250, color: null}},
+            {
+                $set: {
+                    owner: null,
+                    isLocked: false,
+                    price: 0,
+                    color: null,
+                },
+            },
             false,
             true,
         );

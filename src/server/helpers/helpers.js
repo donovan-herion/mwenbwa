@@ -30,7 +30,12 @@ const groupSumOfTreeDefaultValues = () => ({
 exports.calculatePrice = async (tree, userId, req) => {
     try {
         const trees = req.app.locals.db.collection("trees");
-        const treeValue = Math.ceil(tree.circonf * tree.hauteur_totale);
+        let treeValue = 250;
+        if (tree.hauteur_totale !== null || tree.circonf !== null) {
+            treeValue = Math.ceil(
+                (tree.hauteur_totale * tree.circonf) / Math.PI,
+            );
+        }
         let treePrice = treeValue;
 
         if (tree.owner === null) {

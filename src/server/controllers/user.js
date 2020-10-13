@@ -93,8 +93,22 @@ const getUserInfos = async (req, res) => {
     }
 };
 
+const getRanking = async (req, res) => {
+    const users = req.app.locals.db.collection("users");
+    try {
+        const responseGetRanking = await users
+            .aggregate([{$sort: {leaves: -1}}])
+            .toArray();
+
+        return res.status(200).json(responseGetRanking);
+    } catch (error) {
+        return res.status(500).json({error});
+    }
+};
+
 export default {
     login,
     signup,
     getUserInfos,
+    getRanking,
 };

@@ -39,6 +39,8 @@ MongoClient.connect(url, (err, client) => {
     app.post("/login", users.login);
     app.post("/info", users.getUserInfos);
 
+    app.get("/ranking", users.getRanking);
+
     app.post("/trees", trees.getAllTrees);
     app.post("/tree", trees.getOneTree);
 
