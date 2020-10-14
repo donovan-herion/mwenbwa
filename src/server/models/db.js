@@ -32,17 +32,17 @@ const addOwnerAndIsLockedToTree = async db => {
                     comments: [
                         {
                             comment: "salut",
-                            usersName: "pedro",
+                            userName: "pedro",
                             date: "12/12/12",
                         },
                         {
                             comment: "comment c'est cool",
-                            usersName: "jean-luc",
+                            userName: "jean-luc",
                             date: "13/12/12",
                         },
                         {
                             comment: "bien",
-                            usersName: "pedro",
+                            userName: "pedro",
                             date: "14/12/12",
                         },
                     ],
