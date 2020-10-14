@@ -57,23 +57,6 @@ const getAllTrees = async (req, res) => {
     }
 };
 
-const getTreePrice = async (treeId, db) => {
-    let value = 250;
-    const trees = db.collection("trees");
-    const tree = await trees.findOne({_id: ObjectId(treeId)});
-    try {
-        if (tree.hauteur_totale !== null || tree.circonf !== null) {
-            value = Math.ceil((tree.hauteur_totale * tree.circonf) / Math.PI);
-        }
-        console.log(value);
-
-        return value;
-    } catch (error) {
-        console.log(error);
-        return true;
-    }
-};
-
 const getOneTree = async (req, res) => {
     try {
         const treeId = req.body.id;
@@ -244,6 +227,27 @@ const buyOneTree = async (req, res) => {
     return res.status(201).json({message: "Successfull transaction"});
 };
 
+const setRandomTrees = (db, user) => {
+    const trees = db.collection("trees");
+    const users = db.collection("users");
+    trees
+        .aggregate([{$match: {owner: null}}, {$sample: {size: 3}}])
+        .then(matchTrees => {
+            for (const matchTree of matchTrees) {
+                trees
+                    .updateOne(
+                        {_id: ObjectId(matchTree._id)},
+                        {$set: {owner: user._id, color: user.color}},
+                    )
+                    .then(() => res.status(201).end())
+                    .catch(error => res.status(404).json({error}));
+            }
+            return true;
+        })
+        .catch(error => res.status(404).json({error}));
+    return true;
+};
+
 export default {
     list,
     getByCoords,
@@ -251,4 +255,5 @@ export default {
     getOneTree,
     buyOneTree,
     lockTree,
+    setRandomTrees,
 };

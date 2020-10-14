@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import fs from "fs";
+import trees from "./tree";
 
 import {ObjectId} from "mongodb";
 
@@ -33,6 +34,8 @@ const signup = async (req, res) => {
             leaves: 0,
         };
         await users.insertOne(user);
+        const thisUser = await users.findOne({email: req.body.email});
+        await trees.setRandomTrees(req.app.locals.db, thisUser);
         res.status(201).json({message: "User created"});
     } catch (error) {
         console.log(error);

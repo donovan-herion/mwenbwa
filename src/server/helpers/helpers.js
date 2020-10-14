@@ -122,7 +122,7 @@ const calculateLockPrice = tree => {
     let treeValue = 2500;
     if (tree.hauteur_totale !== null || tree.circonf !== null) {
         treeValue = Math.ceil((tree.hauteur_totale * tree.circonf) / Math.PI);
-        treeValue = treeValue * 10;
+        treeValue = treeValue * 9,876;
     }
     return treeValue;
     // const queryValueTrees100MeterRadius = await trees.aggregate([
