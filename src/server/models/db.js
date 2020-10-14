@@ -24,11 +24,11 @@ const addOwnerAndIsLockedToTree = async db => {
             {},
             {
                 $set: {
-                    owner: null,
+                    owner: "",
                     isLocked: false,
                     price: 0,
                     lockPrice: 0,
-                    color: null,
+                    color: "",
                     comments: [
                         {
                             comment: "salut",

@@ -43,6 +43,8 @@ MongoClient.connect(url, (err, client) => {
 
     app.post("/trees", trees.getAllTrees);
     app.post("/tree", trees.getOneTree);
+    app.post("/buytree", trees.buyOneTree);
+    app.get("/logs", logs.getAllLogs);
 
     app.listen(APP_PORT, () =>
         console.log(`🚀 Server is listening on port ${APP_PORT}.`),

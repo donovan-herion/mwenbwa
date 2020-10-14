@@ -96,7 +96,9 @@ const getOneTree = async (req, res) => {
         const trees = req.app.locals.db.collection("trees");
         const tree = await trees.findOne({_id: ObjectId(treeId)}, options);
 
-        tree.price = await helpers.calculatePrice(tree, req.app.locals.db);
+        tree.price = helpers.calculatePrice(tree);
+
+        tree.lockPrice = helpers.calculateLockPrice(tree);
         console.log(tree.price);
 
         return res.status(200).json(tree);
@@ -179,41 +181,49 @@ const lockTree = async (req, res) => {
 const buyOneTree = async (req, res) => {
     const trees = req.app.locals.db.collection("trees");
     const users = req.app.locals.db.collection("users");
-    const treeId = req.params.treeId;
-    const userId = req.userId;
+    const treeId = req.body.treeId;
+    const userId = req.body.userId;
 
     try {
-        const user = await users.findById(userId);
+        const user = await users.findOne({_id: ObjectId(userId)});
         if (!user) {
             return res.status(404).json({error: "User not found"});
         }
-        const tree = await trees.findById(treeId);
+        const tree = await trees.findOne({_id: ObjectId(treeId)});
         if (!tree) {
             return res.status(404).json({error: "tree not found"});
         }
 
-        if (tree.owner === null || tree.owner.toString() !== userId) {
+        if (tree.owner === null || tree.owner.toString() !== user.name) {
             if (tree.isLocked !== true) {
-                const treePrice = await helpers.calculatePrice(tree, userId);
+                const treePrice = helpers.calculatePrice(tree);
                 console.log(treePrice);
                 if (user.leaves > treePrice) {
                     try {
                         await trees.updateOne(
-                            {_id: treeId},
+                            {_id: ObjectId(treeId)},
                             {
-                                color: user.color,
-                                owner: userId,
+                                $set: {
+                                    color: user.color,
+                                    owner: user.name,
+                                },
                             },
                         );
 
                         await users.updateOne(
-                            {_id: userId},
+                            {_id: ObjectId(userId)},
                             {
-                                leaves: Math.ceil(user.leaves - treePrice),
+                                $set: {
+                                    leaves: Math.ceil(user.leaves - treePrice),
+                                },
                             },
                         );
 
                         console.log("you bought a tree");
+                        await log.add(req.app.locals.db, {
+                            action: "Tree purchased",
+                            createdBy: userId,
+                        });
                     } catch (error) {
                         console.log(error);
                     }
@@ -231,8 +241,6 @@ const buyOneTree = async (req, res) => {
     } catch (error) {
         res.status(500).json({error});
     }
-    log.add({action: "Tree purchased", createdBy: userId});
-
     return res.status(201).json({message: "Successfull transaction"});
 };
 

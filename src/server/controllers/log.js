@@ -1,18 +1,18 @@
-exports.add = async (req, res, {action, createdBy}) => {
+const add = async (db, {action, createdBy}) => {
     try {
-        const logs = req.app.locals.db.collection("logs");
+        const logs = db.collection("logs");
         const log = {
             action,
             createdBy,
         };
         await logs.insertOne(log);
-        res.status(201).json({message: "Log created"});
+        return status(201).json({message: "Log created"});
     } catch (error) {
-        res.status(500).json({error: error.message});
+        return status(500).json({error: error.message});
     }
 };
 
-exports.getAllLogs = async (req, res) => {
+const getAllLogs = async (req, res) => {
     try {
         const logs = req.app.locals.db.collection("logs");
         const responseGetAllLogs = await logs
@@ -63,4 +63,9 @@ exports.getAllLogs = async (req, res) => {
     } catch (error) {
         return res.status(500).json({error});
     }
+};
+
+export default {
+    add,
+    getAllLogs,
 };
