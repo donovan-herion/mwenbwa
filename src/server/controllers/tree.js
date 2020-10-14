@@ -76,7 +76,7 @@ const getTreePrice = async (treeId, db) => {
 
 const getOneTree = async (req, res) => {
     try {
-        const treeId = req.query.id;
+        const treeId = req.body.id;
 
         const options = {
             projection: {
@@ -87,16 +87,16 @@ const getOneTree = async (req, res) => {
                 circonf: 1,
                 isLocked: 1,
                 price: 1,
+                lockPrice: 1,
                 owner: 1,
-                x_lambda: 1,
-                y_phi: 1,
+                comments: 1,
             },
         };
 
         const trees = req.app.locals.db.collection("trees");
         const tree = await trees.findOne({_id: ObjectId(treeId)}, options);
 
-        tree.price = await getTreePrice(treeId, req.app.locals.db);
+        tree.price = await helpers.calculatePrice(tree, req.app.locals.db);
         console.log(tree.price);
 
         return res.status(200).json(tree);

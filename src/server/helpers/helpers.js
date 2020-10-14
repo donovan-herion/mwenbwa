@@ -1,7 +1,11 @@
 import {ObjectId} from "mongodb";
 
-exports.getTreeValue = function (tree) {
-    return Math.ceil(tree.diameter * tree.height);
+const getTreeValue = function (tree) {
+    let treeValue = 250;
+    if (tree.hauteur_totale !== null || tree.circonf !== null) {
+        treeValue = Math.ceil((tree.hauteur_totale * tree.circonf) / Math.PI);
+    }
+    return treeValue;
 };
 
 const queryGeolocTrees100MeterRadius = tree => ({
@@ -27,9 +31,10 @@ const groupSumOfTreeDefaultValues = () => ({
     },
 });
 
-exports.calculatePrice = async (tree, userId, req) => {
+const calculatePrice = async (tree, db) => {
     try {
-        const trees = req.app.locals.db.collection("trees");
+        const trees = db.collection("trees");
+        const users = db.collection("users");
         let treeValue = 250;
         if (tree.hauteur_totale !== null || tree.circonf !== null) {
             treeValue = Math.ceil(
@@ -41,11 +46,13 @@ exports.calculatePrice = async (tree, userId, req) => {
         if (tree.owner === null) {
             return treePrice;
         }
-        const currentOwner = tree.owner;
+
+        const user = users.findOne({name: tree.owner});
+        const currentOwner = user.name;
         const valueTargettedPlayersTreeWithin100m = await trees.aggregate([
             queryGeolocTrees100MeterRadius(tree),
             {
-                $match: {owner: ObjectId(currentOwner)},
+                $match: {owner: currentOwner},
             },
             groupSumOfTreeDefaultValues(),
         ]);
@@ -58,7 +65,7 @@ exports.calculatePrice = async (tree, userId, req) => {
         const amountOfTreesTargettedPlayerWithin100m = await trees.aggregate([
             queryGeolocTrees100MeterRadius(tree),
             {
-                $match: {owner: ObjectId(currentOwner)},
+                $match: {owner: currentOwner},
             },
             {$group: {_id: null, count: {$sum: 1}}},
         ]);
@@ -70,10 +77,9 @@ exports.calculatePrice = async (tree, userId, req) => {
                     $and: [
                         {
                             owner: {
-                                $ne: ObjectId(currentOwner),
+                                $ne: currentOwner,
                             },
                         },
-                        {owner: {$type: "objectId"}},
                     ],
                 },
             },
@@ -85,7 +91,7 @@ exports.calculatePrice = async (tree, userId, req) => {
         const valueOfCurrentPlayerTrees = await trees.aggregate([
             queryGeolocTrees100MeterRadius(tree),
             {
-                $match: {owner: ObjectId(userId)},
+                $match: {owner: currentOwner},
             },
             groupSumOfTreeDefaultValues(),
         ]);
@@ -105,7 +111,7 @@ exports.calculatePrice = async (tree, userId, req) => {
     return true;
 };
 
-exports.calculateLockPrice = async (req, tree) => {
+const calculateLockPrice = async (req, tree) => {
     const trees = req.app.locals.db.collection("trees");
     const treeValue = Math.ceil(tree.circonf * tree.hauteur_totale);
 
@@ -146,4 +152,10 @@ exports.calculateLockPrice = async (req, tree) => {
     );
 
     return lockPrice;
+};
+
+export default {
+    getTreeValue,
+    calculatePrice,
+    calculateLockPrice,
 };

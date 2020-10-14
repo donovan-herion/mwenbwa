@@ -1,6 +1,5 @@
 // import {createIndexes} from "./indexes";
 import {createUserCollection} from "./user";
-import Tree from "../controllers/tree";
 
 const setupDb = async db => {
     try {
@@ -28,7 +27,25 @@ const addOwnerAndIsLockedToTree = async db => {
                     owner: null,
                     isLocked: false,
                     price: 0,
+                    lockPrice: 0,
                     color: null,
+                    comments: [
+                        {
+                            comment: "salut",
+                            usersName: "pedro",
+                            date: "12/12/12",
+                        },
+                        {
+                            comment: "comment c'est cool",
+                            usersName: "jean-luc",
+                            date: "13/12/12",
+                        },
+                        {
+                            comment: "bien",
+                            usersName: "pedro",
+                            date: "14/12/12",
+                        },
+                    ],
                 },
             },
             false,
