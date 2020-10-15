@@ -79,14 +79,18 @@ const getOneTree = async (req, res) => {
         const trees = req.app.locals.db.collection("trees");
         const users = req.app.locals.db.collection("users");
         const tree = await trees.findOne({_id: ObjectId(treeId)}, options);
-        const user = await users.findOne({_id: ObjectId(tree.owner)});
 
         tree.price = helpers.calculatePrice(tree);
 
         tree.lockPrice = helpers.calculateLockPrice(tree);
-        console.log(user);
-
-        return res.status(200).json(tree, user);
+        if (tree.owner === "") {
+            return res.status(200).json(tree);
+        }
+        const user = await users.findOne({_id: ObjectId(tree.owner)});
+        const arr = [];
+        arr[0] = tree;
+        arr[1] = user;
+        return res.status(200).json(arr);
     } catch (error) {
         console.log(error);
         return res.status(500).json({error: error.message});
@@ -275,9 +279,18 @@ const setRandomTrees = async (db, user) => {
 const addTreeComment = async (req, res) => {
     const trees = req.app.locals.db.collection("trees");
     const users = req.app.locals.db.collection("users");
+    const treeId = req.body.treeId;
+    const userId = req.body.userId;
+
     try {
-        const user = await users.findOne({_id: req.body.userId});
-        const tree = await trees.findOne({_id: req.body.treeId});
+        const user = await users.findOne({_id: ObjectId(userId)});
+        if (!user) {
+            return res.status(404).json({error: "User not found"});
+        }
+        const tree = await trees.findOne({_id: ObjectId(treeId)});
+        if (!tree) {
+            return res.status(404).json({error: "tree not found"});
+        }
         const comment = {
             comment: req.body.comment,
             userName: user.name,
@@ -295,7 +308,7 @@ const addTreeComment = async (req, res) => {
 
         return res.status(201).json("Comment successfully added");
     } catch (error) {
-        return res.status(500).json({error});
+        return res.status(500).json({error: error.message});
     }
 };
 
