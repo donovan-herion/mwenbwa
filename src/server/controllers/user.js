@@ -44,7 +44,7 @@ const signup = async (req, res) => {
             color: thisUser.color,
             email: thisUser.email,
             leaves: thisUser.leaves,
-            trees: thisUser.trees,
+            trees: 3,
             token: jwt.sign({userId: thisUser._id}, privateKEY, {
                 expiresIn: "24h",
             }),
