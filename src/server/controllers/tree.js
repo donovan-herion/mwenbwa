@@ -176,7 +176,8 @@ const buyOneTree = async (req, res) => {
         if (!tree) {
             return res.status(404).json({error: "tree not found"});
         }
-
+        if (tree.owner !== null) {
+        }
         if (tree.owner === null || tree.owner.toString() !== user.name) {
             if (tree.isLocked !== true) {
                 const treePrice = helpers.calculatePrice(tree);
@@ -198,6 +199,7 @@ const buyOneTree = async (req, res) => {
                             {
                                 $set: {
                                     leaves: Math.ceil(user.leaves - treePrice),
+                                    trees: user.trees + 1,
                                 },
                             },
                         );
@@ -227,25 +229,30 @@ const buyOneTree = async (req, res) => {
     return res.status(201).json({message: "Successfull transaction"});
 };
 
-const setRandomTrees = (db, user) => {
+const setRandomTrees = async (db, user) => {
     const trees = db.collection("trees");
     const users = db.collection("users");
-    trees
-        .aggregate([{$match: {owner: null}}, {$sample: {size: 3}}])
-        .then(matchTrees => {
-            for (const matchTree of matchTrees) {
-                trees
-                    .updateOne(
-                        {_id: ObjectId(matchTree._id)},
-                        {$set: {owner: user._id, color: user.color}},
-                    )
-                    .then(() => res.status(201).end())
-                    .catch(error => res.status(404).json({error}));
-            }
-            return true;
-        })
-        .catch(error => res.status(404).json({error}));
-    return true;
+    try {
+        const matchTree1 = trees.findOne({owner: ""});
+        const matchTree2 = trees.findOne({owner: ""});
+        const matchTree3 = trees.findOne({owner: ""});
+        await trees.updateOne(
+            {_id: ObjectId(matchTree1._id)},
+            {$set: {owner: user._id, color: user.color}},
+        );
+        await trees.updateOne(
+            {_id: ObjectId(matchTree2._id)},
+            {$set: {owner: user._id, color: user.color}},
+        );
+        await trees.updateOne(
+            {_id: ObjectId(matchTree3._id)},
+            {$set: {owner: user._id, color: user.color}},
+        );
+        await users.updateOne({_id: ObjectId(user._id)}, {$set: {trees: 3}});
+        return true;
+    } catch {
+        return true;
+    }
 };
 
 export default {

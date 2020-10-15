@@ -32,11 +32,22 @@ const signup = async (req, res) => {
             password: hash,
             color: req.body.color,
             leaves: 0,
+            trees: 0,
         };
         await users.insertOne(user);
         const thisUser = await users.findOne({email: req.body.email});
+        console.log(thisUser);
         await trees.setRandomTrees(req.app.locals.db, thisUser);
-        res.status(201).json({message: "User created"});
+        res.status(200).json({
+            userId: thisUser._id,
+            name: thisUser.name,
+            color: thisUser.color,
+            email: thisUser.email,
+            leaves: thisUser.leaves,
+            token: jwt.sign({userId: thisUser._id}, privateKEY, {
+                expiresIn: "24h",
+            }),
+        });
     } catch (error) {
         console.log(error);
         res.status(500).json({error: error.message});
