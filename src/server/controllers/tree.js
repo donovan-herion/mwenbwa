@@ -77,14 +77,16 @@ const getOneTree = async (req, res) => {
         };
 
         const trees = req.app.locals.db.collection("trees");
+        const users = req.app.locals.db.collection("users");
         const tree = await trees.findOne({_id: ObjectId(treeId)}, options);
+        const user = await users.findOne({_id: ObjectId(tree.owner)});
 
         tree.price = helpers.calculatePrice(tree);
 
         tree.lockPrice = helpers.calculateLockPrice(tree);
-        console.log(tree.price);
+        console.log(user);
 
-        return res.status(200).json(tree);
+        return res.status(200).json(tree, user);
     } catch (error) {
         console.log(error);
         return res.status(500).json({error: error.message});
@@ -110,15 +112,17 @@ const getByCoords = async (req, res) => {
 const lockTree = async (req, res) => {
     const trees = req.app.locals.db.collection("trees");
     const users = req.app.locals.db.collection("users");
+    const treeId = req.body.treeId;
+    const userId = req.body.userId;
+
     try {
-        const user = await users.findOne({_id: req.body.userId});
+        const user = await users.findOne({_id: ObjectId(userId)});
         if (!user) {
             return res.status(404).json({error: "User not found"});
         }
-
-        const tree = await trees.findOne({_id: req.body.treeId});
+        const tree = await trees.findOne({_id: ObjectId(treeId)});
         if (!tree) {
-            return res.status(404).json({error: "Tree not found"});
+            return res.status(404).json({error: "tree not found"});
         }
 
         const isTreeBelongToUser =
@@ -145,17 +149,20 @@ const lockTree = async (req, res) => {
             });
         }
 
-        await trees.updateOne({_id: ObjectId(tree._id)}, {isLocked: true});
+        await trees.updateOne(
+            {_id: ObjectId(tree._id)},
+            {$set: {isLocked: true}},
+        );
 
         await users.updateOne(
             {_id: ObjectId(user._id)},
-            {leaves: user.leaves - lockPrice},
+            {$set: {leaves: user.leaves - lockPrice}},
         );
         log.add({action: "Tree locked", createdBy: req.body.userId});
 
         return res.status(201).json("Tree successfully locked");
     } catch (error) {
-        res.status(500).json({error});
+        res.status(500).json({error: error.message});
     }
 
     return true;
@@ -176,18 +183,31 @@ const buyOneTree = async (req, res) => {
         if (!tree) {
             return res.status(404).json({error: "tree not found"});
         }
-        if (tree.owner === null || tree.owner.toString() !== user.name) {
+        if (tree.owner === "" || tree.owner.toString() !== user.name) {
             if (tree.isLocked !== true) {
                 const treePrice = helpers.calculatePrice(tree);
                 console.log(treePrice);
                 if (user.leaves > treePrice) {
+                    if (tree.owner !== "") {
+                        const ancienUser = await users.findOne({
+                            _id: ObjectId(tree.owner),
+                        });
+                        await users.updateOne(
+                            {_id: ObjectId(ancienUser._id)},
+                            {
+                                $set: {
+                                    trees: ancienUser.trees - 1,
+                                },
+                            },
+                        );
+                    }
                     try {
                         await trees.updateOne(
                             {_id: ObjectId(treeId)},
                             {
                                 $set: {
                                     color: user.color,
-                                    owner: user.name,
+                                    owner: user._id,
                                 },
                             },
                         );
@@ -252,6 +272,33 @@ const setRandomTrees = async (db, user) => {
     }
 };
 
+const addTreeComment = async (req, res) => {
+    const trees = req.app.locals.db.collection("trees");
+    const users = req.app.locals.db.collection("users");
+    try {
+        const user = await users.findOne({_id: req.body.userId});
+        const tree = await trees.findOne({_id: req.body.treeId});
+        const comment = {
+            comment: req.body.comment,
+            userName: user.name,
+            date: req.body.date,
+        };
+        tree.comments.push(comment);
+        await trees.updateOne(
+            {_id: ObjectId(tree._id)},
+            {
+                $set: {
+                    comments: tree.comments,
+                },
+            },
+        );
+
+        return res.status(201).json("Comment successfully added");
+    } catch (error) {
+        return res.status(500).json({error});
+    }
+};
+
 export default {
     list,
     getByCoords,
@@ -260,4 +307,5 @@ export default {
     buyOneTree,
     lockTree,
     setRandomTrees,
+    addTreeComment,
 };
