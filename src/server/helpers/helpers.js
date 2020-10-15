@@ -41,7 +41,7 @@ const calculatePrice = tree => {
                 (tree.hauteur_totale * tree.circonf) / Math.PI,
             );
         }
-        return treeValue;
+        return treeValue + Math.floor(Math.random() * 10);
         // let treePrice = treeValue;
         // console.log(treeValue);
         // if (tree.owner === null) {
@@ -122,7 +122,7 @@ const calculateLockPrice = tree => {
     let treeValue = 2500;
     if (tree.hauteur_totale !== null || tree.circonf !== null) {
         treeValue = Math.ceil((tree.hauteur_totale * tree.circonf) / Math.PI);
-        treeValue = treeValue * 9,876;
+        treeValue = treeValue * 9 + Math.floor(Math.random() * 10);
     }
     return treeValue;
     // const queryValueTrees100MeterRadius = await trees.aggregate([
