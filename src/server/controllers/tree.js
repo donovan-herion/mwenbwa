@@ -251,7 +251,7 @@ const buyOneTree = async (req, res) => {
             return res.status(403).json({message: "you already own this tree"});
         }
     } catch (error) {
-        res.status(500).json({error});
+        res.status(500).json({error: error.message});
     }
     return res.status(201).json({message: "Successfull transaction"});
 };
