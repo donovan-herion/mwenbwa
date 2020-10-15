@@ -38,14 +38,14 @@ const TreePopup = ({name, circonf, lock}) => {
                 <div className={"popup"}>
                     <div className={"onglets"}>
                         <div
-                            onClick={goInfo}
+                            onClick={() => goInfo}
                             className={`onglet ${
                                 stateOnglets === 1 ? "active" : " "
                             }`}>
                             Info
                         </div>
                         <div
-                            onClick={goComment}
+                            onClick={() => goComment}
                             className={`onglet ${
                                 stateOnglets === 2 ? "active" : " "
                             }`}>
@@ -67,9 +67,9 @@ const TreePopup = ({name, circonf, lock}) => {
                                         <FontAwesomeIcon
                                             icon={faInfoCircle}
                                             className={"iconInfo"}
-                                            onClick={openModal}
-                                            onMouseEnter={showHover}
-                                            onMouseLeave={closeHover}
+                                            onClick={() => openModal}
+                                            onMouseEnter={() => showHover}
+                                            onMouseLeave={() => closeHover}
                                         />
                                         {isShown && (
                                             <div className={"hover"}>

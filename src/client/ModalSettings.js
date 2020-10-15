@@ -5,7 +5,12 @@ import Modal from "react-bootstrap/Modal";
 import "./ModalSettings.css";
 
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faUser, faAt, faUnlock} from "@fortawesome/free-solid-svg-icons";
+import {
+    faUser,
+    faAt,
+    faKey,
+    faCheckCircle,
+} from "@fortawesome/free-solid-svg-icons";
 
 function ModalSettings(props) {
     return (
@@ -50,15 +55,24 @@ function ModalSettings(props) {
 
                         <div className="modal-signup-text-password-container">
                             <FontAwesomeIcon
-                                icon={faUnlock}
+                                icon={faKey}
                                 className="modal-signup-icon-password"
                             />
                             <input
                                 className="modal-signup-password-input"
                                 type="password"
-                                name="password"
-                                placeholder="Password"
-                                value={props.userPasswordSettings}
+                                placeholder="New Password"
+                            />
+                        </div>
+                        <div className="modal-signup-text-password-container">
+                            <FontAwesomeIcon
+                                icon={faCheckCircle}
+                                className="modal-signup-icon-password"
+                            />
+                            <input
+                                className="modal-signup-password-input"
+                                type="password"
+                                placeholder="Confirm New Password"
                             />
                         </div>
                         <div className="modal-signup-checkbox-container">

@@ -1,5 +1,5 @@
 // eslint-disable-next-line unicorn/filename-case
-import React, {useState, useEffect} from "react";
+import React, {useState} from "react";
 import "./Dashboard.css";
 import player from "./data/player.jpg";
 import axios from "./axios";
@@ -14,6 +14,7 @@ import {
 import ModalSettings from "./ModalSettings";
 import ModalRules from "./ModalRules";
 import ModalLogout from "./ModalLogout";
+import {useEffect} from "react";
 
 function Dashboard(props) {
     // Modal settings
@@ -40,6 +41,9 @@ function Dashboard(props) {
     const [userPasswordSettings, setUserPasswordSettings] = useState(null);
     const [userColorSettings, setUserColorSettings] = useState(null);
 
+    //state for ranking
+    const [ranking, setRanking] = useState([]);
+
     // getUserInfo and push it into the modalsettings
     const getUserInfo = () => {
         axios
@@ -55,13 +59,27 @@ function Dashboard(props) {
             .catch((err) => console.log(err.message));
     };
 
+    // getUserInfo and push it into the modalsettings
+    const getRanking = () => {
+        axios
+            .get("/ranking")
+            .then((res) => {
+                setRanking(res.data);
+            })
+            .catch((err) => console.log(err.message));
+    };
+
+    useEffect(() => {
+        getRanking();
+    }, []);
+
     return (
         <div className="structure-div">
             <img className="profile-pic" src={player} alt="player picture" />
             <h2 className="player-info">{`${props.name}`}</h2>
             <div className="leaves-tree">
                 <p className="p-leaves-tree">
-                    <FontAwesomeIcon icon={faLeaf} /> 150
+                    <FontAwesomeIcon icon={faLeaf} /> {props.userLeaves}
                 </p>
                 <p className="p-leaves-tree">
                     <FontAwesomeIcon icon={faTree} /> 40
@@ -77,16 +95,14 @@ function Dashboard(props) {
             <p className="delete-bootstrap-margin">
                 Lorem ipsum dolor sit amet.
             </p>
-            <h2 className="box2">Classement</h2>
-            <p className="delete-bootstrap-margin">
-                Lorem ipsum dolor sit amet.
-            </p>
-            <p className="delete-bootstrap-margin">
-                Lorem ipsum dolor sit amet.
-            </p>
-            <p className="delete-bootstrap-margin">
-                Lorem ipsum dolor sit amet.
-            </p>
+
+            <h2 className="box2">Ranking</h2>
+            {ranking.slice(0, 3).map((player, index) => (
+                <p className="delete-bootstrap-margin">
+                    {`${index + 1}. ${player.name} (${player.leaves})`}
+                </p>
+            ))}
+
             <div className="settings-signout">
                 <FontAwesomeIcon
                     onClick={() => {
@@ -117,6 +133,10 @@ function Dashboard(props) {
                 handleCloseRules={handleCloseRules}
             />
             <ModalLogout
+                setUserLeaves={props.setUserLeaves}
+                setUserId={props.setUserId}
+                setUserToken={props.setUserToken}
+                setName={props.setName}
                 showLogout={showLogout}
                 handleCloseLogout={handleCloseLogout}
             />

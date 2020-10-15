@@ -4,8 +4,19 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import "./ModalLogout.css";
 
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faUser, faAt, faUnlock} from "@fortawesome/free-solid-svg-icons";
+const clearUserData = (tempProps) => {
+    tempProps.setName(null);
+    tempProps.setUserId(null);
+    tempProps.setUserLeaves(null);
+    tempProps.setUserToken(null);
+
+    localStorage.removeItem("name");
+    localStorage.removeItem("userId");
+    localStorage.removeItem("leaves");
+    localStorage.removeItem("token");
+
+    tempProps.handleCloseLogout();
+};
 
 function ModalLogout(props) {
     return (
@@ -28,7 +39,11 @@ function ModalLogout(props) {
                         onClick={props.handleCloseLogout}>
                         Cancel
                     </Button>
-                    <Button variant="danger">Logout</Button>
+                    <Button
+                        onClick={() => clearUserData(props)}
+                        variant="danger">
+                        Logout
+                    </Button>
                 </Modal.Footer>
             </Modal>
         </>
