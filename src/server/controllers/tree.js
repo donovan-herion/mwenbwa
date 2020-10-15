@@ -42,7 +42,7 @@ const getAllTrees = async (req, res) => {
                             coordinates: [lat, lng],
                         },
                         distanceField: "distance.calculated",
-                        maxDistance: 400,
+                        maxDistance: 600,
                     },
                 },
                 queryGetAllTrees(),
@@ -145,10 +145,10 @@ const lockTree = async (req, res) => {
             });
         }
 
-        await trees.updateOne({_id: tree._id}, {isLocked: true});
+        await trees.updateOne({_id: ObjectId(tree._id)}, {isLocked: true});
 
         await users.updateOne(
-            {_id: user._id},
+            {_id: ObjectId(user._id)},
             {leaves: user.leaves - lockPrice},
         );
         log.add({action: "Tree locked", createdBy: req.userId});
