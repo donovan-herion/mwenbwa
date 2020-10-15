@@ -42,7 +42,7 @@ const getAllTrees = async (req, res) => {
                             coordinates: [lat, lng],
                         },
                         distanceField: "distance.calculated",
-                        maxDistance: 1000,
+                        maxDistance: 700,
                     },
                 },
                 queryGetAllTrees(),
