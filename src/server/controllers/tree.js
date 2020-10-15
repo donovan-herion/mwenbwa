@@ -111,12 +111,12 @@ const lockTree = async (req, res) => {
     const trees = req.app.locals.db.collection("trees");
     const users = req.app.locals.db.collection("users");
     try {
-        const user = await users.findOne({_id: req.userId});
+        const user = await users.findOne({_id: req.body.userId});
         if (!user) {
             return res.status(404).json({error: "User not found"});
         }
 
-        const tree = await trees.findOne({_id: req.params.treeId});
+        const tree = await trees.findOne({_id: req.body.treeId});
         if (!tree) {
             return res.status(404).json({error: "Tree not found"});
         }
@@ -151,7 +151,7 @@ const lockTree = async (req, res) => {
             {_id: ObjectId(user._id)},
             {leaves: user.leaves - lockPrice},
         );
-        log.add({action: "Tree locked", createdBy: req.userId});
+        log.add({action: "Tree locked", createdBy: req.body.userId});
 
         return res.status(201).json("Tree successfully locked");
     } catch (error) {
@@ -176,8 +176,6 @@ const buyOneTree = async (req, res) => {
         if (!tree) {
             return res.status(404).json({error: "tree not found"});
         }
-        if (tree.owner !== null) {
-        }
         if (tree.owner === null || tree.owner.toString() !== user.name) {
             if (tree.isLocked !== true) {
                 const treePrice = helpers.calculatePrice(tree);
@@ -193,7 +191,6 @@ const buyOneTree = async (req, res) => {
                                 },
                             },
                         );
-
                         await users.updateOne(
                             {_id: ObjectId(userId)},
                             {
