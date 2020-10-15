@@ -61,7 +61,8 @@
     }
 }
 
-.show-comments {
+.show-comments,
+.show-owner {
     width: 100%;
 }
 
@@ -105,6 +106,11 @@
     outline: none;
 }
 
-.hide-comments {
+.hide-comments,
+.hide-owner {
+    display: none;
+}
+
+.none {
     display: none;
 }

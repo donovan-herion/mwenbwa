@@ -19,23 +19,23 @@ function Home(props) {
                 password: tempPassword,
             })
             .then((res) => {
-                console.log("moment de creer la session login");
-
                 localStorage.setItem("name", res.data.name);
                 localStorage.setItem("userId", res.data.userId);
                 localStorage.setItem("leaves", res.data.leaves);
+                localStorage.setItem("trees", res.data.trees);
                 localStorage.setItem("token", res.data.token);
 
                 const name = localStorage.getItem("name");
                 const userId = localStorage.getItem("userId");
                 const leaves = localStorage.getItem("leaves");
+                const trees = localStorage.getItem("trees");
                 const token = localStorage.getItem("token");
 
                 props.setName(name);
                 props.setUserId(userId);
                 props.setUserLeaves(leaves);
+                props.setUserTrees(trees);
                 props.setUserToken(token);
-                // setHide("none"); no needed anymore with session conditional
             })
             .catch((err) => console.log(err.message));
     };
@@ -49,10 +49,23 @@ function Home(props) {
                 color: tempColor,
             })
             .then((res) => {
-                console.log("moment de creer la session signup");
-                props.setName(JSON.parse(res.config.data).name);
-                // setHide("none");
-                setConnexionStatus(!connexionStatus);
+                localStorage.setItem("name", res.data.name);
+                localStorage.setItem("userId", res.data.userId);
+                localStorage.setItem("leaves", res.data.leaves);
+                localStorage.setItem("trees", res.data.trees);
+                localStorage.setItem("token", res.data.token);
+
+                const name = localStorage.getItem("name");
+                const userId = localStorage.getItem("userId");
+                const leaves = localStorage.getItem("leaves");
+                const trees = localStorage.getItem("trees");
+                const token = localStorage.getItem("token");
+
+                props.setName(name);
+                props.setUserId(userId);
+                props.setUserLeaves(leaves);
+                props.setUserTrees(trees);
+                props.setUserToken(token);
             })
             .catch((err) => console.log(err.message));
     };

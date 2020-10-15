@@ -10,12 +10,14 @@ function Parent() {
     const [userLeaves, setUserLeaves] = useState(
         localStorage.getItem("leaves"),
     );
+    const [userTrees, setUserTrees] = useState(localStorage.getItem("trees"));
     const [userToken, setUserToken] = useState(localStorage.getItem("token"));
 
     return (
         <>
             <Home
                 setUserLeaves={setUserLeaves}
+                setUserTrees={setUserTrees}
                 setUserId={setUserId}
                 setUserToken={setUserToken}
                 setName={setName}
@@ -23,15 +25,17 @@ function Parent() {
             />
             <Dashboard
                 setUserLeaves={setUserLeaves}
+                setUserTrees={setUserTrees}
                 setUserId={setUserId}
                 setUserToken={setUserToken}
                 setName={setName}
                 userId={userId}
                 name={name}
                 userLeaves={userLeaves}
+                userTrees={userTrees}
                 userToken={userToken}
             />
-            <MapOpen userToken={userToken} name={name} />
+            <MapOpen userToken={userToken} name={name} userId={userId} />
         </>
     );
 }

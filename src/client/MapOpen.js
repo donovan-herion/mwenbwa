@@ -64,7 +64,11 @@ function MapOpen(props) {
                         key={tree._id}
                         position={[tree.y_phi, tree.x_lambda]}>
                         <Popup>
-                            <TreeComponentPopup tree={tree} name={props.name} />
+                            <TreeComponentPopup
+                                tree={tree}
+                                name={props.name}
+                                userId={props.userId}
+                            />
                         </Popup>
                     </Marker>
                 ))}

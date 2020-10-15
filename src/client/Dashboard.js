@@ -82,7 +82,7 @@ function Dashboard(props) {
                     <FontAwesomeIcon icon={faLeaf} /> {props.userLeaves}
                 </p>
                 <p className="p-leaves-tree">
-                    <FontAwesomeIcon icon={faTree} /> 40
+                    <FontAwesomeIcon icon={faTree} /> {props.userTrees}
                 </p>
             </div>
             <h2 className="box1">Gamelog</h2>

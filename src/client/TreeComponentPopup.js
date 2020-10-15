@@ -11,26 +11,106 @@ import {faRedo, faPaperPlane} from "@fortawesome/free-solid-svg-icons";
 
 function TreeComponentPopup(props) {
     const [isLoading, setIsLoading] = useState(false);
-    const [commentActive, setCommentActive] = useState(false);
-    const [ownerActive, setOwnerActive] = useState(false);
     const [treeCompleteName, setTreeCompleteName] = useState("");
     const [treePrice, setTreePrice] = useState("");
     const [treeLockPrice, setTreeLockPrice] = useState("");
-    const [treeIsLocked, setTreeIsLocked] = useState("");
-    const [treeOwner, setTreeOwner] = useState("");
-    const [treeComments, setTreeComments] = useState([]);
+    const [treeIsLocked, setTreeIsLocked] = useState(false);
+    const [treeOwner, setTreeOwner] = useState({owner: ""});
+    const [treeComments, setTreeComments] = useState("");
     const [showComments, setShowComments] = useState(false);
+    const [showOwner, setShowOwner] = useState(false);
+
+    //creation de tous les states dont j'ai besoin
+
+    useEffect(() => {
+        getTreeInfo(props.tree._id);
+    }, []);
+
+    //api request buyTree
+    const buyTree = (tempTreeId, tempUserId) => {
+        axios
+            .post("/buytree", {
+                treeId: tempTreeId,
+                userId: tempUserId,
+            })
+            .then((res) => {
+                console.log(res.data);
+                getTreeInfo(props.tree._id);
+            })
+            .catch((err) => console.log(err.message));
+    };
+
+    //api request lockTree
+    const lockTree = (tempTreeId, tempUserId) => {
+        axios
+            .post("/locktree", {
+                treeId: tempTreeId,
+                userId: tempUserId,
+            })
+            .then((res) => {
+                getTreeInfo(props.tree._id);
+            })
+            .catch((err) => console.log(err.message));
+    };
+
+    //checkOwner function AFFICHAGE --USEEFFECT-- {
+    // if (treeislocked) {
+    //   disable tout et laisser un message de tree is locked
+    // } else if (i am the owner) {
+    //         buy (disabled)
+    //         lock(abled)
+    //     } else {
+    //         lock (disabled)
+    //         buy(abled)
+    //     }
+    // }
+
+    // buy function {
+    //     axios
+    //         post .../buy
+    //         userId
+    //         treeid
+
+    //         res {
+    //             getTreeInfo (update le tree) -- terminer par checkowner() -- checker si le state se met a jour dans la fonciton appellee
+    //             getUserInfo (update le dashboard) maj des states
+    //         }
+    // }
+
+    // lock function {
+    //     axios
+    //         post .../lock
+    //         userId
+    //         treeid
+
+    //         res {
+    //             getTreeInfo (update le tree) -- terminer par checkowner() -- checker si le state se met a jour dans la fonciton appellee
+    //             getUserInfo (update le dashboard) maj des states
+    //         }
+    // }
+
+    //sendComment function {
+    //     axios
+    //         post .../comments
+    //         userId
+    //         comments
+    //         Date
+
+    //         res {
+    //             setTreeComments(newArray)
+    //         }
+    // }
 
     //api request getAllTrees
     const getTreeInfo = (tempTreeId) => {
         setIsLoading(true);
         axios
             .post("/tree", {
-                id: tempTreeId,
-                userId: props.name,
+                treeId: tempTreeId,
             })
             .then((res) => {
                 console.log(res.data);
+                console.log("treeinfo update");
                 setTreeCompleteName(res.data.nom_complet);
                 setTreePrice(res.data.price);
                 setTreeLockPrice(res.data.lockPrice);
@@ -42,11 +122,6 @@ function TreeComponentPopup(props) {
             .catch((err) => console.log(err.message));
     };
 
-    useEffect(() => {
-        getTreeInfo(props.tree._id);
-        console.log(`popup dit mount ${props.tree._id}`);
-    }, []);
-
     if (!isLoading) {
         return (
             <div className="popup-container">
@@ -55,18 +130,77 @@ function TreeComponentPopup(props) {
                     <h5 className="nom-complet">{treeCompleteName}</h5>
                     <img src={tree} alt="tree pic" className="tree-pic" />
                 </div>
-                <Button variant="success" className="buttons" block>
-                    Buy for {treePrice} leaves
-                </Button>
-                <Button variant="secondary" className="buttons" block>
-                    Lock for {treeLockPrice} leaves
-                </Button>
+                {treeIsLocked ? (
+                    <Button
+                        variant="danger"
+                        onClick={() => lockTree(props.tree._id, props.userId)}
+                        className="buttons"
+                        disabled
+                        block>
+                        Locked by {treeOwner}
+                    </Button>
+                ) : (
+                    <>
+                        {treeOwner == props.name ? (
+                            <>
+                                <Button
+                                    variant="success"
+                                    className="buttons"
+                                    disabled
+                                    block>
+                                    You are the owner
+                                </Button>
+                                <Button
+                                    variant="secondary"
+                                    className="buttons"
+                                    onClick={() =>
+                                        lockTree(props.tree._id, props.userId)
+                                    }
+                                    block>
+                                    Lock for {treeLockPrice} leaves
+                                </Button>
+                            </>
+                        ) : (
+                            <>
+                                <Button
+                                    variant="success"
+                                    className="buttons"
+                                    onClick={() => {
+                                        console.log(props.tree._id);
+                                        console.log(props.userId);
+                                        buyTree(props.tree._id, props.userId);
+                                    }}
+                                    block>
+                                    Buy for {treePrice} leaves
+                                </Button>
+                                <Button
+                                    variant="secondary"
+                                    disabled
+                                    // onClick={() => setTreeIsLocked(!treeIsLocked)}
+
+                                    className="buttons"
+                                    block>
+                                    You need to buy first
+                                </Button>
+                            </>
+                        )}
+                    </>
+                )}
                 <div className="flex-bottom">
-                    <Button variant="outline-secondary" className="bottom-btn">
-                        Owners (0)
+                    <Button
+                        variant="outline-secondary"
+                        onClick={() => {
+                            setShowOwner(!showOwner);
+                            setShowComments(false);
+                        }}
+                        className="bottom-btn">
+                        Owners ({treeOwner !== "" ? 1 : 0})
                     </Button>
                     <Button
-                        onClick={() => setShowComments(!showComments)}
+                        onClick={() => {
+                            setShowComments(!showComments);
+                            setShowOwner(false);
+                        }}
                         variant="outline-secondary"
                         className="bottom-btn">
                         Comments ({treeComments.length})
@@ -99,6 +233,31 @@ function TreeComponentPopup(props) {
                             <FontAwesomeIcon icon={faPaperPlane} />
                         </button>
                     </div>
+                </div>
+                <div className={showOwner ? "show-owner" : "hide-owner"}>
+                    <ListGroup>
+                        {treeOwner == "" ? (
+                            <ListGroup.Item key={Math.random()}>
+                                No previous owner yet.
+                            </ListGroup.Item>
+                        ) : (
+                            <></>
+                            // treeOwner.map((owner) => (
+                            //     <ListGroup.Item key={Math.random()}>
+                            //         {owner}
+                            //     </ListGroup.Item>
+                            // ))
+                        )}
+                    </ListGroup>
+                    {treeOwner == props.name ? (
+                        <Button variant="outline-success" block>
+                            You are the owner
+                        </Button>
+                    ) : (
+                        <Button variant="outline-danger" block>
+                            You are not the owner
+                        </Button>
+                    )}
                 </div>
             </div>
         );
