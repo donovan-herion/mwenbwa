@@ -87,10 +87,16 @@ const getOneTree = async (req, res) => {
             return res.status(200).json(tree);
         }
         const user = await users.findOne({_id: ObjectId(tree.owner)});
-        const arr = [];
-        arr[0] = tree;
-        arr[1] = user;
-        return res.status(200).json(arr);
+        return res.status(200).json({
+            _id: tree._id,
+            owner: user.name,
+            color: tree.color,
+            nom_complet: tree.nom_complet,
+            price: tree.price,
+            lockPrice: tree.lockPrice,
+            isLocked: tree.isLocked,
+            comments: tree.comments,
+        });
     } catch (error) {
         console.log(error);
         return res.status(500).json({error: error.message});
@@ -245,7 +251,7 @@ const buyOneTree = async (req, res) => {
             return res.status(403).json({message: "you already own this tree"});
         }
     } catch (error) {
-        res.status(500).json({error: message.error});
+        res.status(500).json({error});
     }
     return res.status(201).json({message: "Successfull transaction"});
 };
