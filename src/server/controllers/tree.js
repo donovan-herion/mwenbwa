@@ -59,7 +59,7 @@ const getAllTrees = async (req, res) => {
 
 const getOneTree = async (req, res) => {
     try {
-        const treeId = req.body.id;
+        const treeId = req.body.treeId;
 
         const options = {
             projection: {
