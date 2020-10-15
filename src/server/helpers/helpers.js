@@ -8,28 +8,28 @@ const getTreeValue = function (tree) {
     return treeValue;
 };
 
-const queryGeolocTrees100MeterRadius = tree => ({
-    $geoNear: {
-        near: {
-            type: "Point",
-            coordinates: [tree.x_lambda, tree.y_phi],
-        },
-        distanceField: "distance.calculated",
-        maxDistance: 100,
-    },
-});
-const groupSumOfTreeDefaultValues = () => ({
-    $group: {
-        _id: null,
-        treeValue: {
-            $sum: {
-                $ceil: {
-                    $multiply: ["$circonf", "$hauteur_totale"],
-                },
-            },
-        },
-    },
-});
+// const queryGeolocTrees100MeterRadius = tree => ({
+//     $geoNear: {
+//         near: {
+//             type: "Point",
+//             coordinates: [tree.x_lambda, tree.y_phi],
+//         },
+//         distanceField: "distance.calculated",
+//         maxDistance: 100,
+//     },
+// });
+// const groupSumOfTreeDefaultValues = () => ({
+//     $group: {
+//         _id: null,
+//         treeValue: {
+//             $sum: {
+//                 $ceil: {
+//                     $multiply: ["$circonf", "$hauteur_totale"],
+//                 },
+//             },
+//         },
+//     },
+// });
 
 const calculatePrice = tree => {
     try {
