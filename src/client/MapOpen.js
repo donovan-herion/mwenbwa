@@ -65,6 +65,8 @@ function MapOpen(props) {
                         position={[tree.y_phi, tree.x_lambda]}>
                         <Popup>
                             <TreeComponentPopup
+                                getRanking={props.getRanking}
+                                getUserInfo={props.getUserInfo}
                                 tree={tree}
                                 name={props.name}
                                 userId={props.userId}

@@ -112,11 +112,13 @@ function Home(props) {
                         connexionStatus={connexionStatus}
                         setHide={setHide}
                         checkUser={checkUser}
+                        getRanking={props.getRanking}
                     />
                     <Signup
                         connexionStatus={connexionStatus}
                         setHide={setHide}
                         createUser={createUser}
+                        getRanking={props.getRanking}
                     />
                 </div>
             </>

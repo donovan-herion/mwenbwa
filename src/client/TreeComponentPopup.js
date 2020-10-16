@@ -19,6 +19,7 @@ function TreeComponentPopup(props) {
     const [treeComments, setTreeComments] = useState("");
     const [showComments, setShowComments] = useState(false);
     const [showOwner, setShowOwner] = useState(false);
+    const [writtenComment, setWrittenComment] = useState("");
 
     //creation de tous les states dont j'ai besoin
 
@@ -34,8 +35,9 @@ function TreeComponentPopup(props) {
                 userId: tempUserId,
             })
             .then((res) => {
-                console.log(res.data);
                 getTreeInfo(props.tree._id);
+                props.getUserInfo(props.userId);
+                props.getRanking();
             })
             .catch((err) => console.log(err.message));
     };
@@ -49,8 +51,24 @@ function TreeComponentPopup(props) {
             })
             .then((res) => {
                 getTreeInfo(props.tree._id);
+                props.getUserInfo(props.userId);
+                props.getRanking();
             })
             .catch((err) => console.log(err.message));
+    };
+
+    const addComment = (tempTreeId, tempUserId, tempComment) => {
+        axios
+            .post("/comment", {
+                treeId: tempTreeId,
+                userId: tempUserId,
+                comment: tempComment,
+                date: Date.now(),
+            })
+            .then((res) => {
+                getTreeInfo(props.tree._id);
+                props.getUserInfo(props.userId);
+            });
     };
 
     //checkOwner function AFFICHAGE --USEEFFECT-- {
@@ -226,10 +244,19 @@ function TreeComponentPopup(props) {
                     <div className="submit-comment-div">
                         <input
                             className="submit-comment"
+                            onChange={(e) => setWrittenComment(e.target.value)}
                             type="text"
                             placeholder="Your comment here"
                         />
-                        <button className="submit-comment-button">
+                        <button
+                            onClick={() => {
+                                addComment(
+                                    props.tree._id,
+                                    props.userId,
+                                    writtenComment,
+                                );
+                            }}
+                            className="submit-comment-button">
                             <FontAwesomeIcon icon={faPaperPlane} />
                         </button>
                     </div>

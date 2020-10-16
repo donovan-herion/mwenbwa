@@ -64,9 +64,10 @@ function Signup(props) {
                     </span>
                 </div>
                 <button
-                    onClick={() =>
-                        props.createUser(name, email, password, color)
-                    }
+                    onClick={() => {
+                        props.createUser(name, email, password, color);
+                        props.getRanking();
+                    }}
                     className="home-signup-submit-button"
                     type="submit">
                     Sign Up

@@ -50,6 +50,7 @@ function Login(props) {
                 <button
                     onClick={() => {
                         props.checkUser(email, password);
+                        props.getRanking();
                     }}
                     className="home-login-submit-button"
                     type="submit">

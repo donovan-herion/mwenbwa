@@ -41,11 +41,8 @@ function Dashboard(props) {
     const [userPasswordSettings, setUserPasswordSettings] = useState(null);
     const [userColorSettings, setUserColorSettings] = useState(null);
 
-    //state for ranking
-    const [ranking, setRanking] = useState([]);
-
-    // getUserInfo and push it into the modalsettings
-    const getUserInfo = () => {
+    // getUserSessionDetails and push it into the modalsettings
+    const getUserSessionDetails = () => {
         axios
             .post("/info", {
                 userId: props.userId,
@@ -58,20 +55,6 @@ function Dashboard(props) {
             })
             .catch((err) => console.log(err.message));
     };
-
-    // getUserInfo and push it into the modalsettings
-    const getRanking = () => {
-        axios
-            .get("/ranking")
-            .then((res) => {
-                setRanking(res.data);
-            })
-            .catch((err) => console.log(err.message));
-    };
-
-    useEffect(() => {
-        getRanking();
-    }, []);
 
     return (
         <div className="structure-div">
@@ -97,7 +80,7 @@ function Dashboard(props) {
             </p>
 
             <h2 className="box2">Ranking</h2>
-            {ranking.slice(0, 3).map((player, index) => (
+            {props.ranking.slice(0, 3).map((player, index) => (
                 <p className="delete-bootstrap-margin">
                     {`${index + 1}. ${player.name} (${player.leaves})`}
                 </p>
@@ -107,7 +90,7 @@ function Dashboard(props) {
                 <FontAwesomeIcon
                     onClick={() => {
                         handleShowSettings();
-                        getUserInfo();
+                        getUserSessionDetails();
                     }}
                     icon={faUserCog}
                 />
