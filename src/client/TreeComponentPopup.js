@@ -63,61 +63,12 @@ function TreeComponentPopup(props) {
                 treeId: tempTreeId,
                 userId: tempUserId,
                 comment: tempComment,
-                date: Date.now(),
             })
             .then((res) => {
                 getTreeInfo(props.tree._id);
                 props.getUserInfo(props.userId);
             });
     };
-
-    //checkOwner function AFFICHAGE --USEEFFECT-- {
-    // if (treeislocked) {
-    //   disable tout et laisser un message de tree is locked
-    // } else if (i am the owner) {
-    //         buy (disabled)
-    //         lock(abled)
-    //     } else {
-    //         lock (disabled)
-    //         buy(abled)
-    //     }
-    // }
-
-    // buy function {
-    //     axios
-    //         post .../buy
-    //         userId
-    //         treeid
-
-    //         res {
-    //             getTreeInfo (update le tree) -- terminer par checkowner() -- checker si le state se met a jour dans la fonciton appellee
-    //             getUserInfo (update le dashboard) maj des states
-    //         }
-    // }
-
-    // lock function {
-    //     axios
-    //         post .../lock
-    //         userId
-    //         treeid
-
-    //         res {
-    //             getTreeInfo (update le tree) -- terminer par checkowner() -- checker si le state se met a jour dans la fonciton appellee
-    //             getUserInfo (update le dashboard) maj des states
-    //         }
-    // }
-
-    //sendComment function {
-    //     axios
-    //         post .../comments
-    //         userId
-    //         comments
-    //         Date
-
-    //         res {
-    //             setTreeComments(newArray)
-    //         }
-    // }
 
     //api request getAllTrees
     const getTreeInfo = (tempTreeId) => {
