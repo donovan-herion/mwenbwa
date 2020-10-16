@@ -1,9 +1,13 @@
+import {ObjectId} from "mongodb";
+
 const add = async (db, {action, createdBy, date}) => {
     try {
+        const users = db.collection("users");
+        const user = await users.findOne({_id: ObjectId(createdBy)});
         const logs = db.collection("logs");
         const log = {
             action,
-            createdBy,
+            createdBy: user.name,
             date,
         };
         await logs.insertOne(log);
@@ -14,6 +18,7 @@ const add = async (db, {action, createdBy, date}) => {
 };
 const getAllLogs = async (req, res) => {
     const logs = req.app.locals.db.collection("logs");
+
     try {
         const responseGetAllLogs = await logs
             .aggregate([{$sort: {_id: -1}}])
