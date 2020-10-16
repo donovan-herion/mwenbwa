@@ -29,23 +29,7 @@ const addOwnerAndIsLockedToTree = async db => {
                     price: 0,
                     lockPrice: 0,
                     color: "",
-                    comments: [
-                        {
-                            comment: "salut",
-                            userName: "pedro",
-                            date: "12/12/12",
-                        },
-                        {
-                            comment: "comment c'est cool",
-                            userName: "jean-luc",
-                            date: "13/12/12",
-                        },
-                        {
-                            comment: "bien",
-                            userName: "pedro",
-                            date: "14/12/12",
-                        },
-                    ],
+                    comments: [],
                 },
             },
             false,
