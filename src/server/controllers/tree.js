@@ -168,7 +168,27 @@ const lockTree = async (req, res) => {
             {_id: ObjectId(user._id)},
             {$set: {leaves: user.leaves - lockPrice}},
         );
-        log.add({action: "Tree locked", createdBy: req.body.userId});
+        const currentdate = new Date();
+        let datetime;
+        if (currentdate.getMinutes() >= 0 && currentdate.getMinutes() <= 9) {
+            datetime = `${currentdate.getDate()}/${
+                currentdate.getMonth() + 1
+            }/${currentdate.getFullYear()} @ ${
+                currentdate.getHours() + 2
+            }:0${currentdate.getMinutes()}`;
+        } else {
+            datetime = `${currentdate.getDate()}/${
+                currentdate.getMonth() + 1
+            }/${currentdate.getFullYear()} @ ${
+                currentdate.getHours() + 2
+            }:${currentdate.getMinutes()}`;
+        }
+
+        await log.add(req.app.locals.db, {
+            action: "Tree locked",
+            createdBy: userId,
+            date: datetime,
+        });
 
         return res.status(201).json("Tree successfully locked");
     } catch (error) {
@@ -232,9 +252,28 @@ const buyOneTree = async (req, res) => {
                         );
 
                         console.log("you bought a tree");
+                        const currentdate = new Date();
+                        let datetime;
+                        if (
+                            currentdate.getMinutes() >= 0 &&
+                            currentdate.getMinutes() <= 9
+                        ) {
+                            datetime = `${currentdate.getDate()}/${
+                                currentdate.getMonth() + 1
+                            }/${currentdate.getFullYear()} @ ${
+                                currentdate.getHours() + 2
+                            }:0${currentdate.getMinutes()}`;
+                        } else {
+                            datetime = `${currentdate.getDate()}/${
+                                currentdate.getMonth() + 1
+                            }/${currentdate.getFullYear()} @ ${
+                                currentdate.getHours() + 2
+                            }:${currentdate.getMinutes()}`;
+                        }
                         await log.add(req.app.locals.db, {
                             action: "Tree purchased",
                             createdBy: userId,
+                            date: datetime,
                         });
                     } catch (error) {
                         console.log(error);
@@ -297,10 +336,25 @@ const addTreeComment = async (req, res) => {
         if (!tree) {
             return res.status(404).json({error: "tree not found"});
         }
+        const currentdate = new Date();
+        let datetime;
+        if (currentdate.getMinutes() >= 0 && currentdate.getMinutes() <= 9) {
+            datetime = `${currentdate.getDate()}/${
+                currentdate.getMonth() + 1
+            }/${currentdate.getFullYear()} @ ${
+                currentdate.getHours() + 2
+            }:0${currentdate.getMinutes()}`;
+        } else {
+            datetime = `${currentdate.getDate()}/${
+                currentdate.getMonth() + 1
+            }/${currentdate.getFullYear()} @ ${
+                currentdate.getHours() + 2
+            }:${currentdate.getMinutes()}`;
+        }
         const comment = {
             comment: req.body.comment,
             userName: user.name,
-            date: req.body.date,
+            date: datetime,
         };
         tree.comments.push(comment);
         await trees.updateOne(
