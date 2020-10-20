@@ -2,27 +2,37 @@
 import React, {useState, useEffect} from "react";
 import "./MapOpen.css";
 import {Map, Marker, TileLayer, Popup} from "react-leaflet";
-import Trees from "./data/arbustum.json";
 import treepng from "./data/tree.png";
+import herepng from "./data/here.png";
+import lockpng from "./data/lock.png";
 import MarkerClusterGroup from "react-leaflet-markercluster";
-import leaf from "./data/leaf.png";
 import TreeComponentPopup from "./TreeComponentPopup";
 import axios from "./axios";
 
 function MapOpen(props) {
     //Icon properties
     // eslint-disable-next-line no-undef
-    const icon = L.icon({
+    const treep = L.icon({
         iconUrl: treepng,
         iconSize: [30, 30],
     });
 
+    const here = L.icon({
+        iconUrl: herepng,
+        iconSize: [30, 30],
+    });
+
+    const lock = L.icon({
+        iconUrl: lockpng,
+        iconSize: [30, 30],
+    });
+
     //map center for getAllTrees Function
-    const [mapCenter, setMapCenter] = useState([50.644855, 5.573321]);
-    const [mapZoom, setMapZoom] = useState(17);
+    const [mapCenter, setMapCenter] = useState(() => [50.644855, 5.573321]);
+    const [mapZoom, setMapZoom] = useState(() => 17);
 
     // new tree collection state
-    const [newTrees, setNewTrees] = useState([]);
+    const [newTrees, setNewTrees] = useState(() => []);
 
     //api request getAllTrees
     const getAllTrees = (tempMapCenter) => {
@@ -32,8 +42,7 @@ function MapOpen(props) {
                 lng: tempMapCenter[1],
             })
             .then((res) => {
-                setNewTrees(res.data); //sera la response objet json
-                console.log(res.data);
+                setNewTrees(res.data);
             })
             .catch((err) => console.log(err.message));
     };
@@ -60,13 +69,22 @@ function MapOpen(props) {
             <MarkerClusterGroup disableClusteringAtZoom={17}>
                 {newTrees.map((tree) => (
                     <Marker
-                        icon={icon}
+                        icon={
+                            tree.isLocked
+                                ? lock
+                                : tree.owner === props.userId
+                                ? here
+                                : treep
+                        }
                         key={tree._id}
                         position={[tree.y_phi, tree.x_lambda]}>
-                        <Popup>
+                        <Popup autoPan={false}>
                             <TreeComponentPopup
+                                getLogs={props.getLogs}
                                 getRanking={props.getRanking}
                                 getUserInfo={props.getUserInfo}
+                                getAllTrees={getAllTrees}
+                                mapCenter={mapCenter}
                                 tree={tree}
                                 name={props.name}
                                 userId={props.userId}

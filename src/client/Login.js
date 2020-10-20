@@ -1,12 +1,9 @@
 // eslint-disable-next-line unicorn/filename-case
-import React, {useState} from "react";
+import React from "react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faAt, faUnlock} from "@fortawesome/free-solid-svg-icons";
 
 function Login(props) {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-
     if (props.connexionStatus == true) {
         return (
             <div className="home-right">
@@ -14,14 +11,15 @@ function Login(props) {
                 <div className="home-login-text-input-container">
                     <FontAwesomeIcon
                         icon={faAt}
-                        className="home-login-icon-username"
+                        className="home-login-icon-email"
                     />
                     <input
-                        className="home-login-email-input"
+                        className="home-login-email-input error-login"
                         type="email"
                         name="username"
                         placeholder="Email"
-                        onChange={(e) => setEmail(e.target.value)}
+                        value={props.email}
+                        onChange={(e) => props.setEmail(e.target.value)}
                     />
                 </div>
                 <div className="home-login-text-password-container">
@@ -30,11 +28,12 @@ function Login(props) {
                         className="home-login-icon-password"
                     />
                     <input
-                        className="home-login-password-input"
+                        className="home-login-password-input error-login"
                         type="password"
                         name="password"
                         placeholder="Password"
-                        onChange={(e) => setPassword(e.target.value)}
+                        value={props.password}
+                        onChange={(e) => props.setPassword(e.target.value)}
                     />
                 </div>
                 <div className="home-login-checkbox-container">
@@ -49,13 +48,22 @@ function Login(props) {
                 </div>
                 <button
                     onClick={() => {
-                        props.checkUser(email, password);
+                        props.checkUser(props.email, props.password);
                         props.getRanking();
+                        props.getLogs();
                     }}
                     className="home-login-submit-button"
                     type="submit">
                     Login
                 </button>
+                <a
+                    href="#"
+                    onClick={() =>
+                        props.setConnexionStatus(!props.connexionStatus)
+                    }
+                    className="disapear-button">
+                    Create an account
+                </a>
             </div>
         );
     } else {
