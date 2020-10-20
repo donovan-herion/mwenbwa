@@ -16,6 +16,7 @@ const add = async (db, {action, createdBy, date}) => {
         return status(500).json({error: error.message});
     }
 };
+
 const getAllLogs = async (req, res) => {
     const logs = req.app.locals.db.collection("logs");
 

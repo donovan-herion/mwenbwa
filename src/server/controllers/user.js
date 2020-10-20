@@ -122,9 +122,51 @@ const getRanking = async (req, res) => {
     }
 };
 
+const getUpdateUser = async (req, res) => {
+    const users = req.app.locals.db.collection("users");
+    const userId = req.body.userId;
+    const newEmail = req.body.email;
+    const newPass = req.body.password;
+    const newName = req.body.name;
+
+    try {
+        const user = await users.findOne({_id: ObjectId(userId)});
+        if (!user) {
+            return res.status(404).json({error: "User not found"});
+        }
+        if (newPass === "") {
+            await users.updateOne(
+                {_id: ObjectId(user._id)},
+                {
+                    $set: {
+                        name: newName,
+                        email: newEmail,
+                    },
+                },
+            );
+        } else {
+            const hash = await bcrypt.hash(newPass, 10);
+            await users.updateOne(
+                {_id: ObjectId(user._id)},
+                {
+                    $set: {
+                        name: newName,
+                        email: newEmail,
+                        password: hash,
+                    },
+                },
+            );
+        }
+        return res.status(201).json("Infos successfully changed");
+    } catch (error) {
+        return res.status(500).json({error: error.message});
+    }
+};
+
 export default {
     login,
     signup,
     getUserInfos,
     getRanking,
+    getUpdateUser,
 };
