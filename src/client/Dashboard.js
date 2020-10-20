@@ -1,5 +1,5 @@
 // eslint-disable-next-line unicorn/filename-case
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import "./Dashboard.css";
 import player from "./data/player.jpg";
 import axios from "./axios";
@@ -10,11 +10,13 @@ import {
     faUserCog,
     faSignOutAlt,
     faQuestionCircle,
+    faAngleDoubleLeft,
 } from "@fortawesome/free-solid-svg-icons";
 import ModalSettings from "./ModalSettings";
 import ModalRules from "./ModalRules";
 import ModalLogout from "./ModalLogout";
-import {useEffect} from "react";
+import ModalProfilePic from "./ModalProfilePic";
+import Gravatar from "react-gravatar";
 
 function Dashboard(props) {
     // Modal settings
@@ -35,11 +37,40 @@ function Dashboard(props) {
     const handleCloseLogout = () => setShowLogout(false);
     const handleShowLogout = () => setShowLogout(true);
 
+    // Modal Profile Pic
+    const [showProfilePic, setShowProfilePic] = useState(false);
+
+    const handleCloseProfilePic = () => setShowProfilePic(false);
+    const handleShowProfilePic = () => setShowProfilePic(true);
+
     // state for modalsettings
     const [userNameSettings, setUserNameSettings] = useState(null);
     const [userEmailSettings, setUserEmailSettings] = useState(null);
     const [userPasswordSettings, setUserPasswordSettings] = useState(null);
-    const [userColorSettings, setUserColorSettings] = useState(null);
+    const [userNewPasswordSettings, setUserNewPasswordSettings] = useState(
+        null,
+    );
+
+    // function openDashboard responsive mode
+    // const openDashboard = () => {
+    //     const structureDiv = document.querySelector(".structure-div");
+    //     const topRightIcon = document.querySelector(
+    //         ".top-right-icon-responsive",
+    //     );
+
+    //     topRightIcon.classList.toggle("icon-visible");
+    //     structureDiv.classList.toggle("dashboard-open");
+    // };
+
+    // function openDashboard responsive mode
+    const moveDashboard = () => {
+        const structureDiv = document.querySelector(".structure-div");
+        const topRightIcon = document.querySelector(
+            ".top-right-icon-responsive",
+        );
+        topRightIcon.classList.toggle("icon-visible");
+        structureDiv.classList.toggle("dashboard-open");
+    };
 
     // getUserSessionDetails and push it into the modalsettings
     const getUserSessionDetails = () => {
@@ -56,75 +87,105 @@ function Dashboard(props) {
             .catch((err) => console.log(err.message));
     };
 
-    return (
-        <div className="structure-div">
-            <img className="profile-pic" src={player} alt="player picture" />
-            <h2 className="player-info">{`${props.name}`}</h2>
-            <div className="leaves-tree">
-                <p className="p-leaves-tree">
-                    <FontAwesomeIcon icon={faLeaf} /> {props.userLeaves}
-                </p>
-                <p className="p-leaves-tree">
-                    <FontAwesomeIcon icon={faTree} /> {props.userTrees}
-                </p>
-            </div>
-            <h2 className="box1">Gamelog</h2>
-            <p className="delete-bootstrap-margin">
-                Lorem ipsum dolor sit amet.
-            </p>
-            <p className="delete-bootstrap-margin">
-                Lorem ipsum dolor sit amet.
-            </p>
-            <p className="delete-bootstrap-margin">
-                Lorem ipsum dolor sit amet.
-            </p>
+    useEffect(() => {
+        getUserSessionDetails();
+    }, [props.userId]);
 
-            <h2 className="box2">Ranking</h2>
-            {props.ranking.slice(0, 3).map((player, index) => (
-                <p className="delete-bootstrap-margin">
-                    {`${index + 1}. ${player.name} (${player.leaves})`}
-                </p>
-            ))}
-
-            <div className="settings-signout">
+    if (props.userToken === null) {
+        return null;
+        // eslint-disable-next-line no-else-return
+    } else {
+        return (
+            <div className="structure-div">
                 <FontAwesomeIcon
+                    icon={faAngleDoubleLeft}
+                    className="top-right-icon-responsive"
                     onClick={() => {
-                        handleShowSettings();
-                        getUserSessionDetails();
+                        console.log("clicked");
+                        moveDashboard();
                     }}
-                    icon={faUserCog}
                 />
-                <FontAwesomeIcon
-                    onClick={() => handleShowRules()}
-                    icon={faQuestionCircle}
+                <Gravatar
+                    size="130"
+                    className="profile-pic"
+                    email={userEmailSettings}
+                    default="mp"
+                    onClick={() => {
+                        handleShowProfilePic();
+                    }}
                 />
-                <FontAwesomeIcon
-                    onClick={() => handleShowLogout()}
-                    icon={faSignOutAlt}
+                <h2 className="player-info">{`${props.name}`}</h2>
+                <div className="leaves-tree">
+                    <p className="p-leaves-tree">
+                        <FontAwesomeIcon icon={faLeaf} /> {props.userLeaves}
+                    </p>
+                    <p className="p-leaves-tree">
+                        <FontAwesomeIcon icon={faTree} /> {props.userTrees}
+                    </p>
+                </div>
+                <h2 className="box1">Gamelog</h2>
+                {props.logs.slice(0, 3).map((log) => (
+                    <p className="delete-bootstrap-margin">{`${log.action} by ${log.createdBy}`}</p>
+                ))}
+
+                <h2 className="box2">Ranking</h2>
+                {props.ranking.slice(0, 3).map((player, index) => (
+                    <p className="delete-bootstrap-margin">
+                        {`${index + 1}. ${player.name} (${player.leaves})`}
+                    </p>
+                ))}
+
+                <div className="settings-signout">
+                    <FontAwesomeIcon
+                        onClick={() => {
+                            handleShowSettings();
+                            getUserSessionDetails();
+                        }}
+                        icon={faUserCog}
+                        className="clickable"
+                    />
+                    <FontAwesomeIcon
+                        onClick={() => handleShowRules()}
+                        icon={faQuestionCircle}
+                        className="clickable"
+                    />
+                    <FontAwesomeIcon
+                        onClick={() => handleShowLogout()}
+                        icon={faSignOutAlt}
+                        className="clickable"
+                    />
+                </div>
+                <ModalSettings
+                    userNameSettings={userNameSettings}
+                    userEmailSettings={userEmailSettings}
+                    userPasswordSettings={userPasswordSettings}
+                    userNewPasswordSettings={userNewPasswordSettings}
+                    setUserNameSettings={setUserNameSettings}
+                    setUserEmailSettings={setUserEmailSettings}
+                    setUserPasswordSettings={setUserPasswordSettings}
+                    setUserNewPasswordSettings={setUserPasswordSettings}
+                    showSettings={showSettings}
+                    handleCloseSettings={handleCloseSettings}
+                />
+                <ModalRules
+                    showRules={showRules}
+                    handleCloseRules={handleCloseRules}
+                />
+                <ModalLogout
+                    setUserLeaves={props.setUserLeaves}
+                    setUserId={props.setUserId}
+                    setUserToken={props.setUserToken}
+                    setName={props.setName}
+                    showLogout={showLogout}
+                    handleCloseLogout={handleCloseLogout}
+                />
+                <ModalProfilePic
+                    showProfilePic={showProfilePic}
+                    handleCloseProfilePic={handleCloseProfilePic}
                 />
             </div>
-            <ModalSettings
-                userNameSettings={userNameSettings}
-                userEmailSettings={userEmailSettings}
-                userPasswordSettings={userPasswordSettings}
-                userColorSettings={userColorSettings}
-                showSettings={showSettings}
-                handleCloseSettings={handleCloseSettings}
-            />
-            <ModalRules
-                showRules={showRules}
-                handleCloseRules={handleCloseRules}
-            />
-            <ModalLogout
-                setUserLeaves={props.setUserLeaves}
-                setUserId={props.setUserId}
-                setUserToken={props.setUserToken}
-                setName={props.setName}
-                showLogout={showLogout}
-                handleCloseLogout={handleCloseLogout}
-            />
-        </div>
-    );
+        );
+    }
 }
 
 export default Dashboard;

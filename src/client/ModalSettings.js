@@ -36,6 +36,9 @@ function ModalSettings(props) {
                                 type="text"
                                 name="username"
                                 placeholder="Username"
+                                onChange={(e) =>
+                                    props.setUserNameSettings(e.target.value)
+                                }
                                 value={props.userNameSettings}
                             />
                         </div>
@@ -49,6 +52,9 @@ function ModalSettings(props) {
                                 type="text"
                                 name="username"
                                 placeholder="Email"
+                                onChange={(e) =>
+                                    props.setUserEmailSettings(e.target.value)
+                                }
                                 value={props.userEmailSettings}
                             />
                         </div>
@@ -62,6 +68,11 @@ function ModalSettings(props) {
                                 className="modal-signup-password-input"
                                 type="password"
                                 placeholder="New Password"
+                                onChange={(e) =>
+                                    props.setUserPasswordSettings(
+                                        e.target.value,
+                                    )
+                                }
                             />
                         </div>
                         <div className="modal-signup-text-password-container">
@@ -73,21 +84,16 @@ function ModalSettings(props) {
                                 className="modal-signup-password-input"
                                 type="password"
                                 placeholder="Confirm New Password"
+                                onChange={(e) =>
+                                    props.setUserNewPasswordSettings(
+                                        e.target.value,
+                                    )
+                                }
                             />
-                        </div>
-                        <div className="modal-signup-checkbox-container">
-                            <input
-                                type="color"
-                                name=""
-                                value={props.userColorSettings}
-                            />
-                            <span className="modal-signup-span-checkbox">
-                                Your color
-                            </span>
                         </div>
                     </div>
                 </Modal.Body>
-                <Modal.Footer>
+                <Modal.Footer className="Modal-settings-footer">
                     <Button
                         variant="secondary"
                         onClick={props.handleCloseSettings}>

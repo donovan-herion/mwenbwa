@@ -17,6 +17,9 @@ function Parent() {
     //state for ranking
     const [ranking, setRanking] = useState([]);
 
+    //state for logs
+    const [logs, setLogs] = useState([]);
+
     const getUserInfo = () => {
         axios
             .post("/info", {
@@ -31,10 +34,6 @@ function Parent() {
             .catch((err) => console.log(err.message));
     };
 
-    useEffect(() => {
-        console.log("leaves a change");
-    }, [userLeaves]);
-
     // get Ranking
     const getRanking = () => {
         axios
@@ -45,8 +44,19 @@ function Parent() {
             .catch((err) => console.log(err.message));
     };
 
+    // get Logs
+    const getLogs = () => {
+        axios
+            .get("/logs")
+            .then((res) => {
+                setLogs(res.data);
+            })
+            .catch((err) => console.log(err.message));
+    };
+
     useEffect(() => {
         getRanking();
+        getLogs();
     }, []);
 
     return (
@@ -59,6 +69,7 @@ function Parent() {
                 setName={setName}
                 userToken={userToken}
                 getRanking={getRanking}
+                getLogs={getLogs}
             />
             <Dashboard
                 setUserLeaves={setUserLeaves}
@@ -72,6 +83,7 @@ function Parent() {
                 userTrees={userTrees}
                 userToken={userToken}
                 ranking={ranking}
+                logs={logs}
             />
             <MapOpen
                 userToken={userToken}
@@ -79,6 +91,7 @@ function Parent() {
                 userId={userId}
                 getUserInfo={getUserInfo}
                 getRanking={getRanking}
+                getLogs={getLogs}
             />
         </>
     );

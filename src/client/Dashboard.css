@@ -1,23 +1,41 @@
 .structure-div {
-    width: 20vw;
+    flex: 0 0 310px;
+    padding: 5vh 0;
     height: 100vh;
-    margin: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
     background-color: #1d1e1f;
-    background-repeat: no-repeat;
-    background-size: cover;
-    text-align: center;
     color: #fff;
+    position: relative;
 }
 
 .player-info {
-    margin-top: 3vh;
     font-size: 1.5em;
 }
 
 .profile-pic {
-    width: 10vw;
     border-radius: 50%;
-    margin: 5vh auto 0;
+}
+
+.profile-pic:hover {
+    animation-duration: 3s;
+    animation-name: profilepichover;
+    animation-iteration-count: infinite;
+    cursor: pointer;
+}
+
+@keyframes profilepichover {
+    33% {
+        transform: rotate(10deg);
+    }
+    66% {
+        transform: rotate(-10deg);
+    }
+    100% {
+        transform: rotate(0deg);
+    }
 }
 
 .leaves-tree {
@@ -26,18 +44,12 @@
     align-items: center;
     justify-content: space-between;
     width: 100%;
-    height: 9vh;
-    padding-top: 2vh;
 }
 
-.box1 {
-    font-size: 1.5em;
-    margin: 10vh 0 3vh;
-}
-
+.box1,
 .box2 {
     font-size: 1.5em;
-    margin: 3vh 0;
+    margin: 2vh 0;
 }
 
 .delete-bootstrap-margin {
@@ -50,7 +62,54 @@
 
 .settings-signout {
     display: flex;
-    justify-content: space-around;
+    width: 60%;
+    justify-content: space-between;
     font-size: 2em;
-    margin: 5vh 2vw;
+    margin: 4vh 0 0;
+}
+
+.clickable:hover {
+    cursor: pointer;
+}
+
+.top-right-icon-responsive {
+    display: none;
+}
+
+@media (max-width: 1250px) {
+    body {
+        overflow-x: hidden;
+    }
+    .structure-div {
+        position: absolute;
+        right: -270px;
+        width: 310px;
+        opacity: 0.2;
+        z-index: 2;
+        transition: all 1s;
+        /* transform: rotate(-20deg); */
+    }
+
+    .dashboard-open {
+        right: 0px;
+        opacity: 1;
+    }
+
+    .top-right-icon-responsive {
+        display: block;
+        position: absolute;
+        transition: opacity 1s;
+        transition: transform 1s;
+        opacity: 0.5;
+        top: 15px;
+        left: 10px;
+        color: white;
+        font-size: 30px;
+        transform: rotate(0deg);
+    }
+
+    .icon-visible {
+        opacity: 1;
+        transform: rotate(180deg);
+    }
 }

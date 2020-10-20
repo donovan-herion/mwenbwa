@@ -4,11 +4,6 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faUser, faAt, faUnlock} from "@fortawesome/free-solid-svg-icons";
 
 function Signup(props) {
-    const [name, setName] = useState("");
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [color, setColor] = useState("");
-
     if (props.connexionStatus == false) {
         return (
             <div className="home-right">
@@ -19,11 +14,13 @@ function Signup(props) {
                         className="home-signup-icon-username"
                     />
                     <input
-                        className="home-signup-text-input"
+                        className="home-signup-text-input error-signup-class"
                         type="text"
-                        name="username"
+                        maxLength={15}
+                        minLength={5}
                         placeholder="Username"
-                        onChange={(e) => setName(e.target.value)}
+                        value={props.name}
+                        onChange={(e) => props.setName(e.target.value)}
                     />
                 </div>
                 <div className="home-signup-text-input-container">
@@ -32,11 +29,12 @@ function Signup(props) {
                         className="home-signup-icon-email"
                     />
                     <input
-                        className="home-signup-email-input"
-                        type="text"
+                        className="home-signup-email-input error-signup-class"
+                        type="email"
                         name="username"
                         placeholder="Email"
-                        onChange={(e) => setEmail(e.target.value)}
+                        value={props.email}
+                        onChange={(e) => props.setEmail(e.target.value)}
                     />
                 </div>
 
@@ -46,32 +44,36 @@ function Signup(props) {
                         className="home-signup-icon-password"
                     />
                     <input
-                        className="home-signup-password-input"
+                        className="home-signup-password-input error-signup-class"
                         type="password"
                         name="password"
                         placeholder="Password"
-                        onChange={(e) => setPassword(e.target.value)}
+                        value={props.password}
+                        onChange={(e) => props.setPassword(e.target.value)}
                     />
-                </div>
-                <div className="home-signup-checkbox-container">
-                    <input
-                        type="color"
-                        name=""
-                        onChange={(e) => setColor(e.target.value)}
-                    />
-                    <span className="home-signup-span-checkbox">
-                        Choose your color
-                    </span>
                 </div>
                 <button
                     onClick={() => {
-                        props.createUser(name, email, password, color);
+                        props.createUser(
+                            props.name,
+                            props.email,
+                            props.password,
+                        );
                         props.getRanking();
+                        props.getLogs();
                     }}
                     className="home-signup-submit-button"
                     type="submit">
                     Sign Up
                 </button>
+                <a
+                    href="#"
+                    onClick={() =>
+                        props.setConnexionStatus(!props.connexionStatus)
+                    }
+                    className="disapear-button">
+                    I have an account
+                </a>
             </div>
         );
     } else {

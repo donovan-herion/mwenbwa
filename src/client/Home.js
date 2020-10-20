@@ -1,16 +1,41 @@
 // eslint-disable-next-line unicorn/filename-case
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import "./Home.css";
 import flatDesign from "./data/flat-design.jpg";
 import Login from "./Login";
 import Signup from "./Signup";
 import axios from "./axios";
-import {useEffect} from "react";
 
 function Home(props) {
+    const [connexionStatus, setConnexionStatus] = useState(true);
     const [hide, setHide] = useState("");
 
-    const [connexionStatus, setConnexionStatus] = useState(true);
+    // login state
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+
+    const addErrorAnimationClass = () => {
+        const shakeMeElement = document.querySelectorAll(".error-login");
+        shakeMeElement.forEach((element) => {
+            element.classList.add("error-class");
+            setEmail("");
+            setPassword("");
+        });
+    };
+
+    // signup state
+    const [name, setName] = useState("");
+
+    const addErrorAnimationSignUpClass = () => {
+        const shakeMeElement = document.querySelectorAll(".error-signup-class");
+        shakeMeElement.forEach((element) => {
+            console.log(element);
+            element.classList.add("error-signup");
+            setEmail("");
+            setPassword("");
+            setName("");
+        });
+    };
 
     const checkUser = (tempEmail, tempPassword) => {
         axios
@@ -37,16 +62,18 @@ function Home(props) {
                 props.setUserTrees(trees);
                 props.setUserToken(token);
             })
-            .catch((err) => console.log(err.message));
+            .catch((err) => {
+                addErrorAnimationClass();
+                console.log(err.message);
+            });
     };
 
-    const createUser = (tempName, tempEmail, tempPassword, tempColor) => {
+    const createUser = (tempName, tempEmail, tempPassword) => {
         axios
             .post("/signup", {
                 name: tempName,
                 email: tempEmail,
                 password: tempPassword,
-                color: tempColor,
             })
             .then((res) => {
                 localStorage.setItem("name", res.data.name);
@@ -67,7 +94,10 @@ function Home(props) {
                 props.setUserTrees(trees);
                 props.setUserToken(token);
             })
-            .catch((err) => console.log(err.message));
+            .catch((err) => {
+                console.log(err.message);
+                addErrorAnimationSignUpClass();
+            });
     };
 
     const checkToken = () => {
@@ -110,15 +140,29 @@ function Home(props) {
                     <Login
                         setName={props.setName}
                         connexionStatus={connexionStatus}
+                        setConnexionStatus={setConnexionStatus}
                         setHide={setHide}
                         checkUser={checkUser}
                         getRanking={props.getRanking}
+                        getLogs={props.getLogs}
+                        email={email}
+                        setEmail={setEmail}
+                        password={password}
+                        setPassword={setPassword}
                     />
                     <Signup
                         connexionStatus={connexionStatus}
+                        setConnexionStatus={setConnexionStatus}
                         setHide={setHide}
                         createUser={createUser}
                         getRanking={props.getRanking}
+                        getLogs={props.getLogs}
+                        email={email}
+                        setEmail={setEmail}
+                        password={password}
+                        setPassword={setPassword}
+                        name={name}
+                        setName={setName}
                     />
                 </div>
             </>

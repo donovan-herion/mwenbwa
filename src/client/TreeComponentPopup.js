@@ -4,13 +4,13 @@ import "./TreeComponentPopup.css";
 import Button from "react-bootstrap/Button";
 import tree from "./data/tree.png";
 import axios from "./axios";
-import leaf from "./data/leaf.png";
 import ListGroup from "react-bootstrap/ListGroup";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faRedo, faPaperPlane} from "@fortawesome/free-solid-svg-icons";
 
 function TreeComponentPopup(props) {
     const [isLoading, setIsLoading] = useState(false);
+    const [isStillLoading, setIsStillLoading] = useState(false);
     const [treeCompleteName, setTreeCompleteName] = useState("");
     const [treePrice, setTreePrice] = useState("");
     const [treeLockPrice, setTreeLockPrice] = useState("");
@@ -29,6 +29,7 @@ function TreeComponentPopup(props) {
 
     //api request buyTree
     const buyTree = (tempTreeId, tempUserId) => {
+        setIsStillLoading(true);
         axios
             .post("/buytree", {
                 treeId: tempTreeId,
@@ -36,14 +37,18 @@ function TreeComponentPopup(props) {
             })
             .then((res) => {
                 getTreeInfo(props.tree._id);
+                props.getAllTrees(props.mapCenter);
                 props.getUserInfo(props.userId);
+                props.getLogs();
                 props.getRanking();
+                setIsStillLoading(false);
             })
             .catch((err) => console.log(err.message));
     };
 
     //api request lockTree
     const lockTree = (tempTreeId, tempUserId) => {
+        setIsStillLoading(true);
         axios
             .post("/locktree", {
                 treeId: tempTreeId,
@@ -51,8 +56,11 @@ function TreeComponentPopup(props) {
             })
             .then((res) => {
                 getTreeInfo(props.tree._id);
+                props.getAllTrees(props.mapCenter);
                 props.getUserInfo(props.userId);
+                props.getLogs();
                 props.getRanking();
+                setIsStillLoading(false);
             })
             .catch((err) => console.log(err.message));
     };
@@ -78,8 +86,6 @@ function TreeComponentPopup(props) {
                 treeId: tempTreeId,
             })
             .then((res) => {
-                console.log(res.data);
-                console.log("treeinfo update");
                 setTreeCompleteName(res.data.nom_complet);
                 setTreePrice(res.data.price);
                 setTreeLockPrice(res.data.lockPrice);
@@ -91,7 +97,7 @@ function TreeComponentPopup(props) {
             .catch((err) => console.log(err.message));
     };
 
-    if (!isLoading) {
+    if (isLoading === false && isStillLoading === false) {
         return (
             <div className="popup-container">
                 <div className="flex-top">

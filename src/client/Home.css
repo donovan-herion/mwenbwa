@@ -59,7 +59,6 @@
 
 .home-login-title {
     align-self: flex-start;
-    font-family: "Merriweather Sans", sans-serif;
 }
 
 .home-login-text-input-container {
@@ -67,7 +66,7 @@
     width: 100%;
 }
 
-.home-login-icon-username {
+.home-login-icon-email {
     position: absolute;
     font-size: 1.2em;
     left: 7px;
@@ -82,15 +81,24 @@
     height: 50px;
     border: none;
     border-bottom: solid 1px rgb(121, 121, 121);
+
+    transition: all 2s;
 }
 
-.home-login-text-input {
-    margin: 5vh 0 5vh;
+.home-login-password-input {
     width: 100%;
     padding-left: 10%;
     height: 50px;
     border: none;
     border-bottom: solid 1px rgb(121, 121, 121);
+
+    transition: all 1s;
+}
+
+/* error class */
+.error-class {
+    border: solid 1px rgb(247, 5, 5);
+    border-radius: 5px;
 }
 
 .home-login-text-password-container {
@@ -104,14 +112,6 @@
     left: 7px;
     top: 13px;
     color: rgb(26, 25, 25);
-}
-
-.home-login-password-input {
-    width: 100%;
-    padding-left: 10%;
-    height: 50px;
-    border: none;
-    border-bottom: solid 1px rgb(121, 121, 121);
 }
 
 .home-login-checkbox-container {
@@ -148,7 +148,6 @@
 
 .home-login-span-checkbox {
     padding-left: 10px;
-    font-family: "Rubik", sans-serif;
 }
 
 .home-login-submit-button {
@@ -170,16 +169,15 @@
 
 .home-login-submit-button:focus,
 .home-login-text-input:focus,
-.home-login-password-input:focus {
+.home-login-password-input:focus,
+.home-login-email-input:focus {
     outline: none;
 }
 
 /* Signup */
 
 .home-signup-title {
-    margin-top: -5vh;
     align-self: flex-start;
-    font-family: "Merriweather Sans", sans-serif;
 }
 
 .home-signup-text-input-container {
@@ -279,10 +277,17 @@
     font-family: "Rubik", sans-serif;
 }
 
+/* error signup class */
+.error-signup {
+    border: solid 1px rgb(247, 5, 5);
+    border-radius: 5px;
+}
+
 .home-signup-submit-button {
     background-color: #6eabe4;
     height: 50px;
     width: 120px;
+    margin: 6vh 0;
     padding: 12px;
     align-self: flex-start;
     border: none;
@@ -300,4 +305,80 @@
 .home-signup-text-input:focus,
 .home-signup-password-input:focus {
     outline: none;
+}
+
+.disapear-button {
+    display: none;
+}
+
+@media (max-width: 1250px) {
+    .home-left {
+        display: none;
+    }
+    .home-flex-container {
+        justify-content: center;
+        height: 80vh;
+        align-items: center;
+    }
+    .home-right {
+        padding: 0;
+        margin: 0;
+    }
+
+    .home-login-email-input,
+    .home-login-password-input {
+        padding-left: 35px;
+    }
+
+    .home-login-icon-password {
+        left: 10px;
+        top: 13px;
+    }
+
+    .home-login-icon-email {
+        left: 10px;
+        top: 47px;
+    }
+
+    .home-login-submit-button {
+        width: 100%;
+    }
+
+    .disapear-button {
+        display: block;
+        padding-top: 20px;
+    }
+
+    /* sign up */
+
+    .home-signup-email-input,
+    .home-signup-password-input,
+    .home-signup-text-input {
+        padding-left: 35px;
+        margin-top: 20px;
+    }
+
+    .home-signup-email-input {
+        margin-bottom: 0;
+    }
+
+    .home-signup-submit-button {
+        width: 100%;
+        margin: 6vh 0 0;
+    }
+
+    .home-signup-icon-email {
+        left: 7px;
+        top: 42px;
+    }
+
+    .home-signup-icon-password {
+        left: 7px;
+        top: 42px;
+    }
+
+    .home-signup-icon-username {
+        left: 7px;
+        top: 42px;
+    }
 }
