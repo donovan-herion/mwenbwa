@@ -183,7 +183,6 @@ const lockTree = async (req, res) => {
                 currentdate.getHours() + 2
             }:${currentdate.getMinutes()}`;
         }
-
         await log.add(req.app.locals.db, {
             action: "Tree locked",
             createdBy: userId,
@@ -251,7 +250,6 @@ const buyOneTree = async (req, res) => {
                             },
                         );
 
-                        console.log("you bought a tree");
                         const currentdate = new Date();
                         let datetime;
                         if (
@@ -372,6 +370,31 @@ const addTreeComment = async (req, res) => {
     }
 };
 
+const addLeaves = async (req, res) => {
+    const users = req.app.locals.db.collection("users");
+    const userId = req.body.userId;
+
+    try {
+        const user = await users.findOne({_id: ObjectId(userId)});
+        if (!user) {
+            return res.status(404).json({error: "User not found"});
+        }
+        const leavesAdded = user.trees * 50;
+        await users.updateOne(
+            {_id: ObjectId(user._id)},
+            {
+                $set: {
+                    leaves: user.leaves + leavesAdded,
+                },
+            },
+        );
+
+        return res.status(201).json("Leaves successfully added");
+    } catch (error) {
+        return res.status(500).json({error: error.message});
+    }
+};
+
 export default {
     list,
     getByCoords,
@@ -381,4 +404,5 @@ export default {
     lockTree,
     setRandomTrees,
     addTreeComment,
+    addLeaves,
 };
