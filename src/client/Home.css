@@ -82,7 +82,7 @@
     border: none;
     border-bottom: solid 1px rgb(121, 121, 121);
 
-    transition: all 2s;
+    transition: all 1s;
 }
 
 .home-login-password-input {

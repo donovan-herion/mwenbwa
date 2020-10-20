@@ -34,6 +34,9 @@ function MapOpen(props) {
     // new tree collection state
     const [newTrees, setNewTrees] = useState(() => []);
 
+    // stop loading popup
+    const [isStillLoading, setIsStillLoading] = useState(false);
+
     //api request getAllTrees
     const getAllTrees = (tempMapCenter) => {
         axios
@@ -43,6 +46,7 @@ function MapOpen(props) {
             })
             .then((res) => {
                 setNewTrees(res.data);
+                setIsStillLoading(false);
             })
             .catch((err) => console.log(err.message));
     };
@@ -78,13 +82,16 @@ function MapOpen(props) {
                         }
                         key={tree._id}
                         position={[tree.y_phi, tree.x_lambda]}>
-                        <Popup autoPan={false}>
+                        <Popup minWidth={300} autoPan={false}>
                             <TreeComponentPopup
+                                isStillLoading={isStillLoading}
+                                setIsStillLoading={setIsStillLoading}
                                 getLogs={props.getLogs}
                                 getRanking={props.getRanking}
                                 getUserInfo={props.getUserInfo}
                                 getAllTrees={getAllTrees}
                                 mapCenter={mapCenter}
+                                userLeaves={props.userLeaves}
                                 tree={tree}
                                 name={props.name}
                                 userId={props.userId}
