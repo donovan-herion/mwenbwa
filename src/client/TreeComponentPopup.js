@@ -15,7 +15,8 @@ function TreeComponentPopup(props) {
     const [treePrice, setTreePrice] = useState("");
     const [treeLockPrice, setTreeLockPrice] = useState("");
     const [treeIsLocked, setTreeIsLocked] = useState(false);
-    const [treeOwner, setTreeOwner] = useState({owner: ""});
+    const [treeOwner, setTreeOwner] = useState("");
+    const [treeOwnerId, setTreeOwnerId] = useState("");
     const [treeComments, setTreeComments] = useState("");
     const [showComments, setShowComments] = useState(false);
     const [showOwner, setShowOwner] = useState(false);
@@ -26,6 +27,8 @@ function TreeComponentPopup(props) {
     useEffect(() => {
         getTreeInfo(props.tree._id);
     }, []);
+
+    console.log(treeOwner);
 
     //api request buyTree
     const buyTree = (tempTreeId, tempUserId) => {
@@ -90,6 +93,7 @@ function TreeComponentPopup(props) {
                 setTreeIsLocked(res.data.isLocked);
                 setTreeComments(res.data.comments);
                 setTreeOwner(res.data.owner);
+                setTreeOwnerId(res.data.ownerId);
                 setIsLoading(false);
             })
             .catch((err) => console.log(err.message));
@@ -210,18 +214,6 @@ function TreeComponentPopup(props) {
                         showComments ? "show-comments" : "hide-comments"
                     }>
                     <ListGroup>
-                        {treeOwner.length == 0 ? (
-                            <ListGroup.Item key={Math.random()}>
-                                No owner yet.
-                            </ListGroup.Item>
-                        ) : (
-                            <ListGroup.Item key={Math.random()}>
-                                {treeOwner}
-                            </ListGroup.Item>
-                        )}
-                    </ListGroup>
-
-                    <ListGroup>
                         {treeComments.length == 0 ? (
                             <ListGroup.Item key={Math.random()}>
                                 No posted comment yet.
@@ -262,12 +254,9 @@ function TreeComponentPopup(props) {
                                 No previous owner yet.
                             </ListGroup.Item>
                         ) : (
-                            <></>
-                            // treeOwner.map((owner) => (
-                            //     <ListGroup.Item key={Math.random()}>
-                            //         {owner}
-                            //     </ListGroup.Item>
-                            // ))
+                            <ListGroup.Item key={Math.random()}>
+                                {treeOwner}
+                            </ListGroup.Item>
                         )}
                     </ListGroup>
                     {treeOwner == props.name ? (
