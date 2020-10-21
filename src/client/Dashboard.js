@@ -11,6 +11,7 @@ import {
     faSignOutAlt,
     faQuestionCircle,
     faAngleDoubleLeft,
+    faClock,
 } from "@fortawesome/free-solid-svg-icons";
 import ModalSettings from "./ModalSettings";
 import ModalRules from "./ModalRules";
@@ -44,23 +45,8 @@ function Dashboard(props) {
     const handleShowProfilePic = () => setShowProfilePic(true);
 
     // state for modalsettings
-    const [userNameSettings, setUserNameSettings] = useState(null);
-    const [userEmailSettings, setUserEmailSettings] = useState(null);
-    const [userPasswordSettings, setUserPasswordSettings] = useState(null);
-    const [userNewPasswordSettings, setUserNewPasswordSettings] = useState(
-        null,
-    );
-
-    // function openDashboard responsive mode
-    // const openDashboard = () => {
-    //     const structureDiv = document.querySelector(".structure-div");
-    //     const topRightIcon = document.querySelector(
-    //         ".top-right-icon-responsive",
-    //     );
-
-    //     topRightIcon.classList.toggle("icon-visible");
-    //     structureDiv.classList.toggle("dashboard-open");
-    // };
+    const [userNameSettings, setUserNameSettings] = useState("");
+    const [userEmailSettings, setUserEmailSettings] = useState("");
 
     // function openDashboard responsive mode
     const moveDashboard = () => {
@@ -81,8 +67,6 @@ function Dashboard(props) {
             .then((res) => {
                 setUserNameSettings(res.data.name);
                 setUserEmailSettings(res.data.email);
-                setUserPasswordSettings(res.data.password);
-                setUserColorSettings(res.data.color);
             })
             .catch((err) => console.log(err.message));
     };
@@ -101,7 +85,6 @@ function Dashboard(props) {
                     icon={faAngleDoubleLeft}
                     className="top-right-icon-responsive"
                     onClick={() => {
-                        console.log("clicked");
                         moveDashboard();
                     }}
                 />
@@ -116,6 +99,10 @@ function Dashboard(props) {
                 />
                 <h2 className="player-info">{`${props.name}`}</h2>
                 <div className="leaves-tree">
+                    <p className="p-leaves-tree">
+                        <FontAwesomeIcon icon={faClock} />
+                        {` 10:00`}
+                    </p>
                     <p className="p-leaves-tree">
                         <FontAwesomeIcon icon={faLeaf} /> {props.userLeaves}
                     </p>
@@ -158,12 +145,10 @@ function Dashboard(props) {
                 <ModalSettings
                     userNameSettings={userNameSettings}
                     userEmailSettings={userEmailSettings}
-                    userPasswordSettings={userPasswordSettings}
-                    userNewPasswordSettings={userNewPasswordSettings}
                     setUserNameSettings={setUserNameSettings}
                     setUserEmailSettings={setUserEmailSettings}
-                    setUserPasswordSettings={setUserPasswordSettings}
-                    setUserNewPasswordSettings={setUserPasswordSettings}
+                    setName={props.setName}
+                    userId={props.userId}
                     showSettings={showSettings}
                     handleCloseSettings={handleCloseSettings}
                 />

@@ -1,7 +1,8 @@
 // eslint-disable-next-line unicorn/filename-case
-import React from "react";
+import React, {useState} from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
+import axios from "./axios";
 import "./ModalSettings.css";
 
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
@@ -13,6 +14,38 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 function ModalSettings(props) {
+    const [updateSuccessMessage, setUpdateSuccessMessage] = useState("");
+    const [updateErrorMessage, setUpdateErrorMessage] = useState("");
+
+    const [userPasswordSettings, setUserPasswordSettings] = useState("");
+    const [userNewPasswordSettings, setUserNewPasswordSettings] = useState("");
+
+    const updateUser = (tempUserId, tempEmail, tempName, tempNewPassword) => {
+        axios
+            .post("/update", {
+                userId: tempUserId,
+                email: tempEmail,
+                name: tempName,
+                password: tempNewPassword,
+            })
+            .then((res) => {
+                console.log(res.data);
+                props.setName(props.userNameSettings);
+                localStorage.setItem("name", props.userNameSettings);
+                setUpdateSuccessMessage(res.data);
+
+                document
+                    .querySelector(".update-message-success")
+                    .classList.add("update-message-success-appear");
+            })
+            .catch((err) => {
+                console.log(err.message);
+                setUpdateErrorMessage(err.message);
+                document
+                    .querySelector(".update-message-error")
+                    .classList.add("update-message-error-appear");
+            });
+    };
     return (
         <>
             <Modal
@@ -69,9 +102,7 @@ function ModalSettings(props) {
                                 type="password"
                                 placeholder="New Password"
                                 onChange={(e) =>
-                                    props.setUserPasswordSettings(
-                                        e.target.value,
-                                    )
+                                    setUserPasswordSettings(e.target.value)
                                 }
                             />
                         </div>
@@ -85,12 +116,16 @@ function ModalSettings(props) {
                                 type="password"
                                 placeholder="Confirm New Password"
                                 onChange={(e) =>
-                                    props.setUserNewPasswordSettings(
-                                        e.target.value,
-                                    )
+                                    setUserNewPasswordSettings(e.target.value)
                                 }
                             />
                         </div>
+                        <p className="update-message-success">
+                            {updateSuccessMessage}
+                        </p>
+                        <p className="update-message-error">
+                            {updateErrorMessage}
+                        </p>
                     </div>
                 </Modal.Body>
                 <Modal.Footer className="Modal-settings-footer">
@@ -99,7 +134,23 @@ function ModalSettings(props) {
                         onClick={props.handleCloseSettings}>
                         Close
                     </Button>
-                    <Button variant="primary">Submit</Button>
+                    <Button
+                        variant="primary"
+                        disabled={
+                            userPasswordSettings == userNewPasswordSettings
+                                ? false
+                                : true
+                        }
+                        onClick={() =>
+                            updateUser(
+                                props.userId,
+                                props.userEmailSettings,
+                                props.userNameSettings,
+                                userNewPasswordSettings,
+                            )
+                        }>
+                        Submit
+                    </Button>
                 </Modal.Footer>
             </Modal>
         </>

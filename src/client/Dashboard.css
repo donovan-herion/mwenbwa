@@ -113,3 +113,25 @@
         transform: rotate(180deg);
     }
 }
+
+@media (max-width: 1250px) {
+    .profile-pic {
+        width: 100px;
+        height: 100px;
+        margin-bottom: 20px;
+    }
+
+    .player-info {
+        font-size: 1.2em;
+    }
+
+    .p-leaves-tree {
+        font-size: 1.2em;
+    }
+
+    .box1,
+    .box2,
+    .delete-bootstrap-margin {
+        font-size: 0.9em;
+    }
+}
