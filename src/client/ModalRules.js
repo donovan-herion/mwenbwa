@@ -25,11 +25,22 @@ function ModalRules(props) {
                 <Modal.Body>
                     <p>
                         <img className="tree-image" src={leaf} />
-                        Buy a lot of trees
+                        New users receive 3 trees and 2000 leaves
                     </p>
                     <p>
                         <img className="tree-image" src={leaf} />
-                        Lock the trees you just bought
+                        The purpose of the game is to purchase a maximum of
+                        trees
+                    </p>
+                    <p>
+                        <img className="tree-image" src={leaf} />
+                        You can also lock the trees that you own so that nobody
+                        can steal them
+                    </p>
+                    <p>
+                        <img className="tree-image" src={leaf} />
+                        Every 5 minutes you'll receive a leaves boost which is
+                        related to the number of trees that you currently own
                     </p>
                     <p>
                         <img className="tree-image" src={leaf} />

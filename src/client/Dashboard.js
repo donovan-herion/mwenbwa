@@ -48,6 +48,25 @@ function Dashboard(props) {
     const [userNameSettings, setUserNameSettings] = useState("");
     const [userEmailSettings, setUserEmailSettings] = useState("");
 
+    // function addLeaves
+    const addLeaves = () => {
+        axios
+            .post("/leaves", {
+                userId: props.userId,
+            })
+            .then((res) => {
+                props.getUserInfo();
+            })
+            .catch((err) => console.log(err.message));
+    };
+
+    useEffect(() => {
+        setInterval(() => {
+            console.log("lezzzz go");
+            addLeaves();
+        }, 300000);
+    }, []);
+
     // function openDashboard responsive mode
     const moveDashboard = () => {
         const structureDiv = document.querySelector(".structure-div");
@@ -99,10 +118,6 @@ function Dashboard(props) {
                 />
                 <h2 className="player-info">{`${props.name}`}</h2>
                 <div className="leaves-tree">
-                    <p className="p-leaves-tree">
-                        <FontAwesomeIcon icon={faClock} />
-                        {` 10:00`}
-                    </p>
                     <p className="p-leaves-tree">
                         <FontAwesomeIcon icon={faLeaf} /> {props.userLeaves}
                     </p>

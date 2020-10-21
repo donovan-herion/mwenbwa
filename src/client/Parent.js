@@ -71,20 +71,23 @@ function Parent() {
                 getRanking={getRanking}
                 getLogs={getLogs}
             />
-            <Dashboard
-                setUserLeaves={setUserLeaves}
-                setUserTrees={setUserTrees}
-                setUserId={setUserId}
-                setUserToken={setUserToken}
-                setName={setName}
-                userId={userId}
-                name={name}
-                userLeaves={userLeaves}
-                userTrees={userTrees}
-                userToken={userToken}
-                ranking={ranking}
-                logs={logs}
-            />
+            {userToken !== null ? (
+                <Dashboard
+                    setUserLeaves={setUserLeaves}
+                    setUserTrees={setUserTrees}
+                    setUserId={setUserId}
+                    setUserToken={setUserToken}
+                    setName={setName}
+                    getUserInfo={getUserInfo}
+                    userId={userId}
+                    name={name}
+                    userLeaves={userLeaves}
+                    userTrees={userTrees}
+                    userToken={userToken}
+                    ranking={ranking}
+                    logs={logs}
+                />
+            ) : null}
             <MapOpen
                 userToken={userToken}
                 name={name}
