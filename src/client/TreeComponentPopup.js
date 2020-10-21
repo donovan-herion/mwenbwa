@@ -210,6 +210,18 @@ function TreeComponentPopup(props) {
                         showComments ? "show-comments" : "hide-comments"
                     }>
                     <ListGroup>
+                        {treeOwner.length == 0 ? (
+                            <ListGroup.Item key={Math.random()}>
+                                No owner yet.
+                            </ListGroup.Item>
+                        ) : (
+                            <ListGroup.Item key={Math.random()}>
+                                {treeOwner}
+                            </ListGroup.Item>
+                        )}
+                    </ListGroup>
+
+                    <ListGroup>
                         {treeComments.length == 0 ? (
                             <ListGroup.Item key={Math.random()}>
                                 No posted comment yet.
@@ -222,6 +234,7 @@ function TreeComponentPopup(props) {
                             ))
                         )}
                     </ListGroup>
+
                     <div className="submit-comment-div">
                         <input
                             className="submit-comment"
