@@ -31,7 +31,7 @@ const signup = async (req, res) => {
             email: req.body.email,
             password: hash,
             color: req.body.color,
-            leaves: 10000,
+            leaves: 2000,
             trees: 0,
         };
         await users.insertOne(user);
