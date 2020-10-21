@@ -15,7 +15,7 @@ function TreeComponentPopup(props) {
     const [treePrice, setTreePrice] = useState("");
     const [treeLockPrice, setTreeLockPrice] = useState("");
     const [treeIsLocked, setTreeIsLocked] = useState(false);
-    const [treeOwner, setTreeOwner] = useState("");
+    const [treeOwnerName, setTreeOwnerName] = useState("");
     const [treeOwnerId, setTreeOwnerId] = useState("");
     const [treeComments, setTreeComments] = useState("");
     const [showComments, setShowComments] = useState(false);
@@ -27,8 +27,6 @@ function TreeComponentPopup(props) {
     useEffect(() => {
         getTreeInfo(props.tree._id);
     }, []);
-
-    console.log(treeOwner);
 
     //api request buyTree
     const buyTree = (tempTreeId, tempUserId) => {
@@ -92,7 +90,7 @@ function TreeComponentPopup(props) {
                 setTreeLockPrice(res.data.lockPrice);
                 setTreeIsLocked(res.data.isLocked);
                 setTreeComments(res.data.comments);
-                setTreeOwner(res.data.owner);
+                setTreeOwnerName(res.data.ownerName);
                 setTreeOwnerId(res.data.ownerId);
                 setIsLoading(false);
             })
@@ -114,11 +112,11 @@ function TreeComponentPopup(props) {
                         className="buttons"
                         disabled
                         block>
-                        Locked by {treeOwner}
+                        Locked by {treeOwnerName}
                     </Button>
                 ) : (
                     <>
-                        {treeOwner == props.name ? (
+                        {props.userId == treeOwnerId ? (
                             <>
                                 <Button
                                     variant="success"
@@ -197,7 +195,7 @@ function TreeComponentPopup(props) {
                             setShowComments(false);
                         }}
                         className="bottom-btn">
-                        Owners ({treeOwner !== "" ? 1 : 0})
+                        Owners ({treeOwnerName !== "" ? 1 : 0})
                     </Button>
                     <Button
                         onClick={() => {
@@ -249,17 +247,17 @@ function TreeComponentPopup(props) {
                 </div>
                 <div className={showOwner ? "show-owner" : "hide-owner"}>
                     <ListGroup>
-                        {treeOwner == "" ? (
+                        {treeOwnerName == "" ? (
                             <ListGroup.Item key={Math.random()}>
                                 No previous owner yet.
                             </ListGroup.Item>
                         ) : (
                             <ListGroup.Item key={Math.random()}>
-                                {treeOwner}
+                                {treeOwnerName}
                             </ListGroup.Item>
                         )}
                     </ListGroup>
-                    {treeOwner == props.name ? (
+                    {props.userId == treeOwnerId ? (
                         <Button variant="outline-success" block>
                             You are the owner
                         </Button>
