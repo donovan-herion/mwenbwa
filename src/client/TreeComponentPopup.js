@@ -10,7 +10,7 @@ import {faRedo, faPaperPlane} from "@fortawesome/free-solid-svg-icons";
 
 function TreeComponentPopup(props) {
     const [isLoading, setIsLoading] = useState(false);
-    const [isStillLoading, setIsStillLoading] = useState(false);
+
     const [treeCompleteName, setTreeCompleteName] = useState("");
     const [treePrice, setTreePrice] = useState("");
     const [treeLockPrice, setTreeLockPrice] = useState("");
@@ -29,7 +29,7 @@ function TreeComponentPopup(props) {
 
     //api request buyTree
     const buyTree = (tempTreeId, tempUserId) => {
-        setIsStillLoading(true);
+        props.setIsStillLoading(true);
         axios
             .post("/buytree", {
                 treeId: tempTreeId,
@@ -37,18 +37,17 @@ function TreeComponentPopup(props) {
             })
             .then((res) => {
                 getTreeInfo(props.tree._id);
-                props.getAllTrees(props.mapCenter);
                 props.getUserInfo(props.userId);
                 props.getLogs();
                 props.getRanking();
-                setIsStillLoading(false);
+                props.getAllTrees(props.mapCenter);
             })
             .catch((err) => console.log(err.message));
     };
 
     //api request lockTree
     const lockTree = (tempTreeId, tempUserId) => {
-        setIsStillLoading(true);
+        props.setIsStillLoading(true);
         axios
             .post("/locktree", {
                 treeId: tempTreeId,
@@ -56,11 +55,10 @@ function TreeComponentPopup(props) {
             })
             .then((res) => {
                 getTreeInfo(props.tree._id);
-                props.getAllTrees(props.mapCenter);
                 props.getUserInfo(props.userId);
                 props.getLogs();
                 props.getRanking();
-                setIsStillLoading(false);
+                props.getAllTrees(props.mapCenter);
             })
             .catch((err) => console.log(err.message));
     };
@@ -97,7 +95,7 @@ function TreeComponentPopup(props) {
             .catch((err) => console.log(err.message));
     };
 
-    if (isLoading === false && isStillLoading === false) {
+    if (isLoading === false && props.isStillLoading === false) {
         return (
             <div className="popup-container">
                 <div className="flex-top">
@@ -125,34 +123,60 @@ function TreeComponentPopup(props) {
                                     block>
                                     You are the owner
                                 </Button>
-                                <Button
-                                    variant="secondary"
-                                    className="buttons"
-                                    onClick={() =>
-                                        lockTree(props.tree._id, props.userId)
-                                    }
-                                    block>
-                                    Lock for {treeLockPrice} leaves
-                                </Button>
+                                {/* condition locktree enough leaves */}
+                                {props.userLeaves >= treeLockPrice ? (
+                                    <Button
+                                        variant="secondary"
+                                        className="buttons"
+                                        onClick={() =>
+                                            lockTree(
+                                                props.tree._id,
+                                                props.userId,
+                                            )
+                                        }
+                                        block>
+                                        Lock for {treeLockPrice} leaves
+                                    </Button>
+                                ) : (
+                                    <Button
+                                        variant="danger"
+                                        className="buttons"
+                                        disabled
+                                        block>
+                                        Need more leaves ({treeLockPrice})
+                                    </Button>
+                                )}
                             </>
                         ) : (
                             <>
-                                <Button
-                                    variant="success"
-                                    className="buttons"
-                                    onClick={() => {
-                                        console.log(props.tree._id);
-                                        console.log(props.userId);
-                                        buyTree(props.tree._id, props.userId);
-                                    }}
-                                    block>
-                                    Buy for {treePrice} leaves
-                                </Button>
+                                {/* condition buy enough leaves */}
+                                {props.userLeaves >= treePrice ? (
+                                    <Button
+                                        variant="success"
+                                        className="buttons"
+                                        onClick={() => {
+                                            console.log(props.tree._id);
+                                            console.log(props.userId);
+                                            buyTree(
+                                                props.tree._id,
+                                                props.userId,
+                                            );
+                                        }}
+                                        block>
+                                        Buy for {treePrice} leaves
+                                    </Button>
+                                ) : (
+                                    <Button
+                                        variant="danger"
+                                        className="buttons"
+                                        disabled
+                                        block>
+                                        Need more leaves ({treePrice})
+                                    </Button>
+                                )}
                                 <Button
                                     variant="secondary"
                                     disabled
-                                    // onClick={() => setTreeIsLocked(!treeIsLocked)}
-
                                     className="buttons"
                                     block>
                                     You need to buy first

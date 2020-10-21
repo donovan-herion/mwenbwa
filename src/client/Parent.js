@@ -89,6 +89,7 @@ function Parent() {
                 userToken={userToken}
                 name={name}
                 userId={userId}
+                userLeaves={userLeaves}
                 getUserInfo={getUserInfo}
                 getRanking={getRanking}
                 getLogs={getLogs}
