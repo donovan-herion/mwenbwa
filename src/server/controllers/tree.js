@@ -89,7 +89,8 @@ const getOneTree = async (req, res) => {
         const user = await users.findOne({_id: ObjectId(tree.owner)});
         return res.status(200).json({
             _id: tree._id,
-            owner: user.name,
+            ownerName: user.name,
+            ownerId: user._id,
             color: tree.color,
             nom_complet: tree.nom_complet,
             price: tree.price,
