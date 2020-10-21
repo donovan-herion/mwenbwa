@@ -131,9 +131,6 @@ const getUpdateUser = async (req, res) => {
 
     try {
         const user = await users.findOne({_id: ObjectId(userId)});
-        if (!user) {
-            return res.status(404).json({error: "User not found"});
-        }
         if (newPass === "") {
             await users.updateOne(
                 {_id: ObjectId(user._id)},
