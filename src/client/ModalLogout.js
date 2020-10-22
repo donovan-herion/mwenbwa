@@ -4,18 +4,21 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import "./ModalLogout.css";
 
-const clearUserData = (tempProps) => {
-    tempProps.setName(null);
-    tempProps.setUserId(null);
-    tempProps.setUserLeaves(null);
-    tempProps.setUserToken(null);
+const clearUserData = (props) => {
+    props.setName(null);
+    props.setUserId(null);
+    props.setUserLeaves(null);
+    props.setUserToken(null);
 
     localStorage.removeItem("name");
     localStorage.removeItem("userId");
     localStorage.removeItem("leaves");
+    localStorage.removeItem("trees");
     localStorage.removeItem("token");
 
-    tempProps.handleCloseLogout();
+    clearInterval(props.intervalId);
+
+    props.handleCloseLogout();
 };
 
 function ModalLogout(props) {

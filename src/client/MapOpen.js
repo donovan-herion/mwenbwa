@@ -82,7 +82,7 @@ function MapOpen(props) {
                         }
                         key={tree._id}
                         position={[tree.y_phi, tree.x_lambda]}>
-                        <Popup minWidth={300} autoPan={false}>
+                        <Popup minWidth={300} autoPan={false} key={tree._id}>
                             <TreeComponentPopup
                                 isStillLoading={isStillLoading}
                                 setIsStillLoading={setIsStillLoading}

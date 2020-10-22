@@ -79,6 +79,7 @@ function Parent() {
                     setUserToken={setUserToken}
                     setName={setName}
                     getUserInfo={getUserInfo}
+                    getRanking={getRanking}
                     userId={userId}
                     name={name}
                     userLeaves={userLeaves}

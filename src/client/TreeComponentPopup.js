@@ -195,7 +195,7 @@ function TreeComponentPopup(props) {
                             setShowComments(false);
                         }}
                         className="bottom-btn">
-                        Owners ({treeOwnerName !== "" ? 1 : 0})
+                        Owners ({treeOwnerName == null ? 0 : 1})
                     </Button>
                     <Button
                         onClick={() => {
@@ -247,7 +247,7 @@ function TreeComponentPopup(props) {
                 </div>
                 <div className={showOwner ? "show-owner" : "hide-owner"}>
                     <ListGroup>
-                        {treeOwnerName == "" ? (
+                        {treeOwnerName == null ? (
                             <ListGroup.Item key={Math.random()}>
                                 No previous owner yet.
                             </ListGroup.Item>

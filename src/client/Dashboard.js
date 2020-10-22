@@ -48,8 +48,8 @@ function Dashboard(props) {
     const [userNameSettings, setUserNameSettings] = useState("");
     const [userEmailSettings, setUserEmailSettings] = useState("");
 
-    // state for addLeaves
-    const [setIntervalIsRunning, setSetIntervalIsRunning] = useState(false);
+    // interval id state
+    const [intervalId, setIntervalId] = useState("");
 
     // function addLeaves
     const addLeaves = () => {
@@ -59,17 +59,17 @@ function Dashboard(props) {
             })
             .then((res) => {
                 props.getUserInfo();
+                props.getRanking();
             })
             .catch((err) => console.log(err.message));
     };
 
     useEffect(() => {
-        console.log("second loop");
-        if (!setIntervalIsRunning) console.log("first loop");
-        setInterval(() => {
-            addLeaves();
-        }, 3000);
-        setSetIntervalIsRunning(true);
+        setIntervalId(
+            setInterval(() => {
+                addLeaves();
+            }, 60000),
+        );
     }, []);
 
     // function openDashboard responsive mode
@@ -183,6 +183,7 @@ function Dashboard(props) {
                     setName={props.setName}
                     showLogout={showLogout}
                     handleCloseLogout={handleCloseLogout}
+                    intervalId={intervalId}
                 />
                 <ModalProfilePic
                     showProfilePic={showProfilePic}
