@@ -10,7 +10,8 @@ import bodyParser from "body-parser";
 const {APP_PORT} = process.env;
 
 // Connection URL
-const url = "mongodb://dev:dev@mongo:27017";
+const url =
+    "mongodb://admin:admin@cluster0-shard-00-00.4ctxr.mongodb.net:27017,cluster0-shard-00-01.4ctxr.mongodb.net:27017,cluster0-shard-00-02.4ctxr.mongodb.net:27017/test?replicaSet=atlas-j0vgqg-shard-0&ssl=true&authSource=admin";
 
 // Database Name
 const dbName = "mwenbwa";
