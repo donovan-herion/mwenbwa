@@ -48,6 +48,9 @@ function Dashboard(props) {
     const [userNameSettings, setUserNameSettings] = useState("");
     const [userEmailSettings, setUserEmailSettings] = useState("");
 
+    // state for addLeaves
+    const [setIntervalIsRunning, setSetIntervalIsRunning] = useState(false);
+
     // function addLeaves
     const addLeaves = () => {
         axios
@@ -61,10 +64,12 @@ function Dashboard(props) {
     };
 
     useEffect(() => {
+        console.log("second loop");
+        if (!setIntervalIsRunning) console.log("first loop");
         setInterval(() => {
-            console.log("lezzzz go");
             addLeaves();
-        }, 300000);
+        }, 3000);
+        setSetIntervalIsRunning(true);
     }, []);
 
     // function openDashboard responsive mode
