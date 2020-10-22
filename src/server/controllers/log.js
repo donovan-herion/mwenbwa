@@ -23,6 +23,7 @@ const getAllLogs = async (req, res) => {
     try {
         const responseGetAllLogs = await logs
             .aggregate([{$sort: {_id: -1}}])
+            .limit(3)
             .toArray();
 
         return res.status(200).json(responseGetAllLogs);

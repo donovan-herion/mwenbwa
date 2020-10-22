@@ -114,6 +114,7 @@ const getRanking = async (req, res) => {
     try {
         const responseGetRanking = await users
             .aggregate([{$sort: {leaves: -1}}])
+            .limit(3)
             .toArray();
 
         return res.status(200).json(responseGetRanking);
