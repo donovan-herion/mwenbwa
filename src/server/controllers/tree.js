@@ -169,26 +169,26 @@ const lockTree = async (req, res) => {
             {_id: ObjectId(user._id)},
             {$set: {leaves: user.leaves - lockPrice}},
         );
-        // const currentdate = new Date();
-        // let datetime;
-        // if (currentdate.getMinutes() >= 0 && currentdate.getMinutes() <= 9) {
-        //     datetime = `${currentdate.getDate()}/${
-        //         currentdate.getMonth() + 1
-        //     }/${currentdate.getFullYear()} @ ${
-        //         currentdate.getHours() + 2
-        //     }:0${currentdate.getMinutes()}`;
-        // } else {
-        //     datetime = `${currentdate.getDate()}/${
-        //         currentdate.getMonth() + 1
-        //     }/${currentdate.getFullYear()} @ ${
-        //         currentdate.getHours() + 2
-        //     }:${currentdate.getMinutes()}`;
-        // }
-        // await log.add(req.app.locals.db, {
-        //     action: "Tree locked",
-        //     createdBy: userId,
-        //     date: datetime,
-        // });
+        const currentdate = new Date();
+        let datetime;
+        if (currentdate.getMinutes() >= 0 && currentdate.getMinutes() <= 9) {
+            datetime = `${currentdate.getDate()}/${
+                currentdate.getMonth() + 1
+            }/${currentdate.getFullYear()} @ ${
+                currentdate.getHours() + 2
+            }:0${currentdate.getMinutes()}`;
+        } else {
+            datetime = `${currentdate.getDate()}/${
+                currentdate.getMonth() + 1
+            }/${currentdate.getFullYear()} @ ${
+                currentdate.getHours() + 2
+            }:${currentdate.getMinutes()}`;
+        }
+        await log.add(req.app.locals.db, {
+            action: "Tree locked",
+            createdBy: userId,
+            date: datetime,
+        });
 
         return res.status(201).json("Tree successfully locked");
     } catch (error) {

@@ -11,9 +11,9 @@ const add = async (db, {action, createdBy, date}) => {
             date,
         };
         await logs.insertOne(log);
-        return status(201).json({message: "Log created"});
+        return log;
     } catch (error) {
-        return status(500).json({error: error.message});
+        return "error";
     }
 };
 
