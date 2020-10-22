@@ -11,7 +11,7 @@ const {APP_PORT} = process.env;
 
 // Connection URL
 const url =
-    "mongodb://admin:admin@cluster0-shard-00-00.4ctxr.mongodb.net:27017,cluster0-shard-00-01.4ctxr.mongodb.net:27017,cluster0-shard-00-02.4ctxr.mongodb.net:27017/test?replicaSet=atlas-j0vgqg-shard-0&ssl=true&authSource=admin";
+    "mongodb://dev:dev@cluster0-shard-00-00.kl4px.mongodb.net:27017,cluster0-shard-00-01.kl4px.mongodb.net:27017,cluster0-shard-00-02.kl4px.mongodb.net:27017/test?replicaSet=atlas-1004la-shard-0&ssl=true&authSource=admin";
 
 // Database Name
 const dbName = "mwenbwa";
