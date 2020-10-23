@@ -7,8 +7,8 @@ import logs from "./controllers/log";
 import stuffDB from "./models/db";
 import bodyParser from "body-parser";
 
-const {PORT} = process.env;
-const PORT = process.env.PORT || PORT;
+const {APP_PORT} = process.env;
+const PORT = process.env.PORT || APP_PORT;
 
 // Connection URL
 const url =
