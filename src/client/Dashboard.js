@@ -68,7 +68,7 @@ function Dashboard(props) {
         setIntervalId(
             setInterval(() => {
                 addLeaves();
-            }, 60000),
+            }, 300000),
         );
     }, []);
 
