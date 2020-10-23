@@ -7,8 +7,8 @@ import logs from "./controllers/log";
 import stuffDB from "./models/db";
 import bodyParser from "body-parser";
 
-const {APP_PORT} = process.env;
-const PORT = process.env.PORT || APP_PORT; //assigning default port or something like that
+const {PORT} = process.env;
+const PORT = process.env.PORT || PORT;
 
 // Connection URL
 const url =
@@ -52,7 +52,7 @@ MongoClient.connect(url, (err, client) => {
     app.post("/buytree", trees.buyOneTree);
     app.get("/logs", logs.getAllLogs);
 
-    app.listen(APP_PORT, () =>
-        console.log(`🚀 Server is listening on port ${APP_PORT}.`),
+    app.listen(PORT, () =>
+        console.log(`🚀 Server is listening on port ${PORT}.`),
     );
 });
