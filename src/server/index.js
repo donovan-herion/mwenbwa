@@ -8,6 +8,7 @@ import stuffDB from "./models/db";
 import bodyParser from "body-parser";
 
 const {APP_PORT} = process.env;
+const PORT = process.env.PORT || APP_PORT; //assigning default port or something like that
 
 // Connection URL
 const url =
