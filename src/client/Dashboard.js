@@ -49,7 +49,7 @@ function Dashboard(props) {
     const [userEmailSettings, setUserEmailSettings] = useState("");
 
     // interval id state
-    const [intervalId, setIntervalId] = useState("");
+    const [intervalId, setIntervalId] = useState(null);
 
     // function addLeaves
     const addLeaves = () => {
@@ -65,11 +65,17 @@ function Dashboard(props) {
     };
 
     useEffect(() => {
-        setIntervalId(
-            setInterval(() => {
-                addLeaves();
-            }, 300000),
-        );
+        if (intervalId == null) {
+            setIntervalId(
+                setInterval(() => {
+                    addLeaves();
+                }, 300000),
+            );
+        } else {
+            alert(
+                "You shouldn't try to cheat using multiple devices at the same time...",
+            );
+        }
     }, []);
 
     // function openDashboard responsive mode
