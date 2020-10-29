@@ -24,7 +24,7 @@ MongoClient.connect(url, (err, client) => {
     }
 
     const db = client.db(dbName);
-    stuffDB.addOwnerAndIsLockedToTree(db);
+    // stuffDB.addOwnerAndIsLockedToTree(db);
     stuffDB.setupDb(db);
 
     const app = express();
