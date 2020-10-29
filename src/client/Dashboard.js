@@ -65,17 +65,11 @@ function Dashboard(props) {
     };
 
     useEffect(() => {
-        if (intervalId == null) {
-            setIntervalId(
-                setInterval(() => {
-                    addLeaves();
-                }, 300000),
-            );
-        } else {
-            alert(
-                "You shouldn't try to cheat using multiple devices at the same time...",
-            );
-        }
+        setIntervalId(
+            setInterval(() => {
+                addLeaves();
+            }, 300000),
+        );
     }, []);
 
     // function openDashboard responsive mode
